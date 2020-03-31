@@ -1,0 +1,24 @@
+{% extends 'jsondataferret/base.html' %}
+
+
+
+{% block content %}
+
+    {% if types %}
+        <table class="table">
+            <tr>
+                <td>Title</td>
+                <td>&nbsp;</td>
+            </tr>
+            {% for type in types %}
+                <tr>
+                    <td><a href="{% url 'jsondataferret_type_index' public_id=type.public_id %}">{{ type.title }}</a></td>
+                    <td><a href="{% url 'jsondataferret_type_index' public_id=type.public_id %}" class="btn btn-primary">View</a></td>
+                </tr>
+            {% endfor %}
+        </table>
+    {% else %}
+        <p>No types are available.</p>
+    {% endif %}
+
+{% endblock %}

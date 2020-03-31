@@ -1,0 +1,16 @@
+{% extends 'jsondataferretexampleapp/base.html' %}
+
+
+
+{% block content %}
+
+<p>Organisation {{ organisation.data_public.title }}</p>
+
+<table class="table">
+    {% for title, value in field_data.items %}
+        <tr><th>{{ title }}</th><td>{{ value }}</td></tr>
+    {% endfor %}
+</table>
+
+
+{% endblock %}

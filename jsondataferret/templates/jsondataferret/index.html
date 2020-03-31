@@ -1,0 +1,11 @@
+{% extends 'jsondataferret/base.html' %}
+
+
+
+{% block content %}
+
+<p>Welcome</p>
+<p><a href="{% url 'jsondataferret_type_list' %}" class="btn btn-primary">Types</a></p>
+<p><a href="{% url 'jsondataferret_event_list' %}" class="btn btn-primary">Events</a></p>
+
+{% endblock %}

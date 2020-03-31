@@ -1,0 +1,12 @@
+{% extends 'jsondataferretexampleapp/base.html' %}
+
+
+
+{% block content %}
+
+<p>Welcome</p>
+
+<p><a href="{% url 'jsondataferretexampleapp_admin_project_list' %}" class="btn btn-primary">Projects</a></p>
+<p><a href="{% url 'jsondataferretexampleapp_admin_organisation_list' %}" class="btn btn-primary">Organisations</a></p>
+
+{% endblock %}

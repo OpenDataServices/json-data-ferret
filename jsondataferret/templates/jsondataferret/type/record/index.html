@@ -1,0 +1,52 @@
+{% extends 'jsondataferret/base.html' %}
+
+{% block content %}
+
+<h2>Type {{ type.title }} record {{ record.public_id }}</h2>
+
+<p>{{ record.get_cached_data_html | safe }}</p>
+
+
+
+{% if record.cached_jsonschema_validation_errors or record.cached_exists %}
+    <h3>Validation</h3>
+
+    {% if record.cached_jsonschema_validation_errors %}
+        <p><i class="fas fa-times-circle"></i> There were validation errors:</p>
+        <p class="text-right">
+            <a href="#" onclick="$('#validation_errors').toggle(); return false;"><button type="button" class="btn btn-secondary">Show/Hide</button></a>
+        </p>
+        <table class="table" id="validation_errors">
+            <tr>
+                <th>Message</th>
+                <th>Data Path</th>
+                <th>Schema Path</th>
+            </tr>
+            {% for err in record.cached_jsonschema_validation_errors %}
+                <tr>
+                    <td>
+                        {{ err.message }}
+                    </td>
+                    <td>
+                        {{ err.path_str }}
+                    </td>
+                    <td>
+                        {{ err.schema_path_str }}
+                    </td>
+
+                </tr>
+            {% endfor %}
+        </table>
+    {% else %}
+        <p><i class="fas fa-check-circle"></i> Validation passed</p>
+    {% endif %}
+
+{% endif %}
+
+{% if download_form_available %}
+    <p><a href="{% url 'jsondataferret_record_download_form' type_id=type.public_id record_id=record.public_id %}" class="btn btn-primary">Download as Spreadsheet</a></p>
+    <p><a href="{% url 'jsondataferret_record_import_form' type_id=type.public_id record_id=record.public_id %}" class="btn btn-primary">Import Spreadsheet</a></p>
+{% endif %}
+<p><a href="{% url 'jsondataferret_record_moderate' type_id=type.public_id record_id=record.public_id %}" class="btn btn-primary">Moderate</a></p>
+
+{% endblock %}

@@ -1,0 +1,15 @@
+{% extends 'jsondataferret/base.html' %}
+
+
+
+{% block content %}
+
+<h2>Type {{ type.title }}</h2>
+
+<p><a href="{% url 'jsondataferret_type_record_list' type_id=type.public_id %}" class="btn btn-primary">Records</a></p>
+
+{% if download_form_available %}
+    <p><a href="{% url 'jsondataferret_type_download_blank_form' type_id=type.public_id %}" class="btn btn-primary">Download blank Spreadsheet</a></p>
+{% endif %}
+
+{% endblock %}

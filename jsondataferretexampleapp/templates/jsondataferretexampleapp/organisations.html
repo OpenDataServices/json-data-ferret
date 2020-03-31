@@ -1,0 +1,25 @@
+{% extends 'jsondataferretexampleapp/base.html' %}
+
+
+
+{% block content %}
+
+    {% if organisations %}
+        <table class="table">
+            <tr>
+                <th>Title</th>
+                <th>&nbsp;</th>
+            </tr>
+            {% for organisation in organisations %}
+                <tr>
+                    <td>{{ organisation.data_public.title }}</td>
+                    <td><a href="{% url 'jsondataferretexampleapp_organisation_index' public_id=organisation.public_id %}" class="btn btn-primary">View</a></td>
+
+                </tr>
+            {% endfor %}
+        </table>
+    {% else %}
+        <p>No organisations are available.</p>
+    {% endif %}
+
+{% endblock %}

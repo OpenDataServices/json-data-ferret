@@ -1,0 +1,57 @@
+{
+  "$id": "https://example.com/organisation.schema.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Organisation",
+  "type": "object",
+  "required": [
+    "status"
+  ],
+  "properties": {
+    "status": {
+      "type": "string",
+      "enum": ["PUBLIC", "PRIVATE", "DISPUTED"]
+    },
+    "title": {
+      "type": "string",
+      "description": "The organisations Title."
+    },
+    "contact": {
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string"
+        },
+        "telephone": {
+          "type": "string"
+        },
+        "name": {
+          "$ref": "#/definitions/value_string"
+        },
+        "position": {
+          "$ref": "#/definitions/value_string"
+        }
+      }
+    }
+  },
+  "definitions": {
+    "value_string": {
+      "type": "object",
+      "required": [
+        "value", "source", "status"
+      ],
+      "properties": {
+        "value": {
+          "type": "string"
+        },
+        "source": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string",
+          "enum": ["PUBLIC", "PRIVATE", "DISPUTED"]
+        }
+      }
+    }
+  }
+}
+

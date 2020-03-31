@@ -1,0 +1,24 @@
+{% extends 'jsondataferret/base.html' %}
+
+
+
+{% block content %}
+
+    {% if records %}
+        <table class="table">
+            <tr>
+                <td>ID</td>
+                <td>&nbsp;</td>
+            </tr>
+            {% for record in records %}
+                <tr>
+                    <td><a href="{% url 'jsondataferret_record_index' type_id=type.public_id record_id=record.public_id %}">{{ record.public_id }}</a></td>
+                    <td><a href="{% url 'jsondataferret_record_index' type_id=type.public_id record_id=record.public_id %}" class="btn btn-primary">View</a></td>
+                </tr>
+            {% endfor %}
+        </table>
+    {% else %}
+        <p>No records are available.</p>
+    {% endif %}
+
+{% endblock %}
