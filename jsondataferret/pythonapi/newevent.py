@@ -10,7 +10,7 @@ from jsondataferret.pythonapi.runevents import apply_event
 
 class NewEventData:
     def __init__(
-        self, type, record, key, data, mode=EVENT_MODE_REPLACE, approved=False
+        self, type, record, data, mode=EVENT_MODE_REPLACE, key="/", approved=False
     ):
         self.type = type
         self.record = record

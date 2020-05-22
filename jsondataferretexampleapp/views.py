@@ -208,7 +208,6 @@ def admin_organisation_import_form(request, public_id):
             new_event_data = NewEventData(
                 TYPE_ORGANISATION_PUBLIC_ID,
                 data.public_id,
-                "/",
                 json_data,
                 mode=jsondataferret.EVENT_MODE_MERGE,
             )
@@ -258,7 +257,6 @@ def admin_organisation_make_private(request, public_id):
             new_event_data = NewEventData(
                 type,
                 record,
-                "/",
                 {"status": "PRIVATE"},
                 mode=jsondataferret.EVENT_MODE_MERGE,
             )
@@ -310,7 +308,6 @@ def admin_organisation_make_disputed(request, public_id):
             new_event_data = NewEventData(
                 type,
                 record,
-                "/",
                 {"status": "DISPUTED"},
                 mode=jsondataferret.EVENT_MODE_MERGE,
             )
@@ -357,7 +354,6 @@ def admin_organisations_new(request):
             data = NewEventData(
                 TYPE_ORGANISATION_PUBLIC_ID,
                 id,
-                "/",
                 {"title": form.cleaned_data["title"],},
                 approved=True,
             )
@@ -543,7 +539,6 @@ def admin_project_import_form(request, public_id):
             new_event_data = NewEventData(
                 TYPE_PROJECT_PUBLIC_ID,
                 data.public_id,
-                "/",
                 json_data,
                 mode=jsondataferret.EVENT_MODE_MERGE,
             )
@@ -593,7 +588,6 @@ def admin_project_make_private(request, public_id):
             new_event_data = NewEventData(
                 type,
                 record,
-                "/",
                 {"status": "PRIVATE"},
                 mode=jsondataferret.EVENT_MODE_MERGE,
             )
@@ -643,7 +637,6 @@ def admin_project_make_disputed(request, public_id):
             new_event_data = NewEventData(
                 type,
                 record,
-                "/",
                 {"status": "DISPUTED"},
                 mode=jsondataferret.EVENT_MODE_MERGE,
             )
@@ -688,7 +681,6 @@ def admin_projects_new(request):
             data = NewEventData(
                 TYPE_PROJECT_PUBLIC_ID,
                 id,
-                "/",
                 {"title": form.cleaned_data["title"],},
                 approved=True,
             )

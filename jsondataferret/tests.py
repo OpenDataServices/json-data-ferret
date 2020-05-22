@@ -10,7 +10,7 @@ class NewEditCase(TestCase):
 
     def test_basic(self):
         """hello world"""
-        data = NewEventData("animal", "lion", "/", {"title": "Lion", "sound": "Roar!"})
+        data = NewEventData("animal", "lion", {"title": "Lion", "sound": "Roar!"})
         newEvent([data], None)
 
         edits = Edit.objects.all()

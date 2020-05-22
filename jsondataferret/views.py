@@ -219,7 +219,7 @@ def record_import_form(request, type_id, record_id):
             # process the data in form.cleaned_data as required (here we just write it to the model due_back field)
             # Save the event
             new_event_data = jsondataferret.pythonapi.newevent.NewEventData(
-                type, record, "/", json_data, mode=jsondataferret.EVENT_MODE_MERGE,
+                type, record, json_data, mode=jsondataferret.EVENT_MODE_MERGE,
             )
             jsondataferret.pythonapi.newevent.newEvent(
                 [new_event_data], user=request.user
