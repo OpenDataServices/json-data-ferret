@@ -681,7 +681,7 @@ def admin_projects_new(request):
             data = NewEventData(
                 TYPE_PROJECT_PUBLIC_ID,
                 id,
-                {"title": form.cleaned_data["title"],},
+                {"project_name": {"value": form.cleaned_data["title"]},},
                 approved=True,
             )
             newEvent([data], user=request.user)

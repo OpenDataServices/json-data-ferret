@@ -4,7 +4,7 @@
 
 {% block content %}
 
-<p>Project {{ project.data_private.title }}</p>
+<p>Project {{ project.data_private.project_name.value }}</p>
 
 <table class="table">
     {% for title, value in field_data.items %}
