@@ -4,3 +4,4 @@ jsonmerge
 spreadsheetforms
 Pygments
 jsonschema
+django-environ

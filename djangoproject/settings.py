@@ -12,6 +12,22 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 
 import os
 
+import environ
+
+env = environ.Env(  # set default values and casting
+    # SECURITY WARNING: keep the secret key used in production secret!
+    JSONDATAFERRET_SECRET_KEY=(
+        str,
+        "lz@kp-&z6grz#fp#*!mi6c4-mozm)1u6m$57j%v21#u9l#lnog",
+    ),
+    JSONDATAFERRET_DEBUG=(bool, True),
+    JSONDATAFERRET_ALLOWED_HOSTS=(list, []),
+    JSONDATAFERRET_DATABASE_NAME=(str, "app"),
+    JSONDATAFERRET_DATABASE_USER=(str, "app"),
+    JSONDATAFERRET_DATABASE_PASSWORD=(str, "password"),
+    JSONDATAFERRET_DATABASE_HOST=(str, "localhost"),
+)
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -20,14 +36,12 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv(
-    "JSONDATAFERRET_SECRET_KEY", "lz@kp-&z6grz#fp#*!mi6c4-mozm)1u6m$57j%v21#u9l#lnog"
-)
+SECRET_KEY = env("JSONDATAFERRET_SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv("JSONDATAFERRET_DEBUG", True)
+DEBUG = env("JSONDATAFERRET_DEBUG")
 
-ALLOWED_HOSTS = os.getenv("JSONDATAFERRET_ALLOWED_HOSTS", [])
+ALLOWED_HOSTS = env("JSONDATAFERRET_ALLOWED_HOSTS")
 
 
 # Application definition
@@ -80,10 +94,10 @@ WSGI_APPLICATION = "djangoproject.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": os.getenv("JSONDATAFERRET_DATABASE_NAME", "app"),
-        "USER": os.getenv("JSONDATAFERRET_DATABASE_USER", "app"),
-        "PASSWORD": os.getenv("JSONDATAFERRET_DATABASE_PASSWORD", "password"),
-        "HOST": os.getenv("JSONDATAFERRET_DATABASE_HOST", "localhost"),
+        "NAME": env("JSONDATAFERRET_DATABASE_NAME"),
+        "USER": env("JSONDATAFERRET_DATABASE_USER"),
+        "PASSWORD": env("JSONDATAFERRET_DATABASE_PASSWORD"),
+        "HOST": env("JSONDATAFERRET_DATABASE_HOST"),
     }
 }
 

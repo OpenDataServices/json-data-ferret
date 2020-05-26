@@ -6,6 +6,7 @@
 #
 asgiref==3.2.7            # via django
 attrs==19.3.0             # via jsonschema
+django-environ==0.4.5     # via -r requirements.in
 django==3.0.6             # via -r requirements.in
 et-xmlfile==1.0.1         # via openpyxl
 importlib-metadata==1.6.0  # via jsonschema
@@ -18,8 +19,8 @@ psycopg2==2.8.5           # via -r requirements.in
 pygments==2.6.1           # via -r requirements.in
 pyrsistent==0.16.0        # via jsonschema
 pytz==2020.1              # via django
-six==1.14.0               # via jsonschema, pyrsistent
-spreadsheetforms==0.2.0   # via -r requirements.in
+six==1.15.0               # via jsonschema, pyrsistent
+spreadsheetforms==0.2.1   # via -r requirements.in
 sqlparse==0.3.1           # via django
 zipp==3.1.0               # via importlib-metadata
 
