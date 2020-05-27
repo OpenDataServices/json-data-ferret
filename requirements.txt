@@ -20,7 +20,7 @@ pygments==2.6.1           # via -r requirements.in
 pyrsistent==0.16.0        # via jsonschema
 pytz==2020.1              # via django
 six==1.15.0               # via jsonschema, pyrsistent
-spreadsheetforms==0.2.1   # via -r requirements.in
+spreadsheetforms==0.3.0   # via -r requirements.in
 sqlparse==0.3.1           # via django
 zipp==3.1.0               # via importlib-metadata
 

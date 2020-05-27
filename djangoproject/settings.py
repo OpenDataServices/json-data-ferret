@@ -140,6 +140,8 @@ LOGIN_REDIRECT_URL = "/app/"
 # We disable MemoryFileUploadHandler - there is code in example app that assumes all files are written to disk
 FILE_UPLOAD_HANDLERS = ["django.core.files.uploadhandler.TemporaryFileUploadHandler"]
 
+JSONDATAFERRET_SPREADSHEET_FORM_DATE_FORMAT = "%Y-%m-%d"
+
 JSONDATAFERRET_TYPE_INFORMATION = {
     "org": {
         "jsonschema_file": os.path.join(

@@ -200,7 +200,11 @@ def admin_organisation_import_form(request, public_id):
                 "organisation.xlsx",
             )
             json_data = spreadsheetforms.api.get_data_from_form(
-                guide_file, request.FILES["file"].temporary_file_path()
+                guide_file,
+                request.FILES["file"].temporary_file_path(),
+                date_format=getattr(
+                    settings, "JSONDATAFERRET_SPREADSHEET_FORM_DATE_FORMAT", None
+                ),
             )
 
             # process the data in form.cleaned_data as required (here we just write it to the model due_back field)
@@ -531,7 +535,11 @@ def admin_project_import_form(request, public_id):
                 "project.xlsx",
             )
             json_data = spreadsheetforms.api.get_data_from_form(
-                guide_file, request.FILES["file"].temporary_file_path()
+                guide_file,
+                request.FILES["file"].temporary_file_path(),
+                date_format=getattr(
+                    settings, "JSONDATAFERRET_SPREADSHEET_FORM_DATE_FORMAT", None
+                ),
             )
 
             # process the data in form.cleaned_data as required

@@ -214,6 +214,9 @@ def record_import_form(request, type_id, record_id):
             json_data = spreadsheetforms.api.get_data_from_form(
                 type_data.get("spreadsheet_form_guide"),
                 request.FILES["file"].temporary_file_path(),
+                date_format=getattr(
+                    settings, "JSONDATAFERRET_SPREADSHEET_FORM_DATE_FORMAT", None
+                ),
             )
 
             # process the data in form.cleaned_data as required (here we just write it to the model due_back field)

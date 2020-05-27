@@ -31,7 +31,7 @@ pyrsistent==0.16.0        # via -r requirements.txt, jsonschema
 pytz==2020.1              # via -r requirements.txt, django
 regex==2020.5.14          # via black
 six==1.15.0               # via -r requirements.txt, jsonschema, pip-tools, pyrsistent
-spreadsheetforms==0.2.1   # via -r requirements.txt
+spreadsheetforms==0.3.0   # via -r requirements.txt
 sqlparse==0.3.1           # via -r requirements.txt, django
 toml==0.10.1              # via black
 typed-ast==1.4.1          # via black
