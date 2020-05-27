@@ -11,7 +11,7 @@ from django.shortcuts import render
 from django.urls import reverse
 
 import jsondataferret
-from jsondataferret.models import Edit, Record, Type
+from jsondataferret.models import Edit, Event, Record, Type
 from jsondataferret.pythonapi.newevent import NewEventData, newEvent
 from jsondataferretexampleapp import (  # noqa
     TYPE_ORGANISATION_FIELD_LIST,
@@ -764,4 +764,57 @@ def admin_project_moderate(request, public_id):
         request,
         "jsondataferretexampleapp/admin/project/moderate.html",
         {"type": type, "record": record, "edits": edits},
+    )
+
+
+@login_required
+def admin_project_history(request, public_id):
+    try:
+        type = Type.objects.get(public_id=TYPE_PROJECT_PUBLIC_ID)
+        record = Record.objects.get(type=type, public_id=public_id)
+    except Type.DoesNotExist:
+        raise Http404("Type does not exist")
+    except Record.DoesNotExist:
+        raise Http404("Record does not exist")
+
+    events = Event.objects.filter_by_record(record)
+
+    return render(
+        request,
+        "jsondataferretexampleapp/admin/project/history.html",
+        {"type": type, "record": record, "events": events},
+    )
+
+
+########################### Admin - Event
+
+
+@login_required
+def admin_event_index(request, event_id):
+    try:
+        event = Event.objects.get(public_id=event_id)
+    except Event.DoesNotExist:
+        raise Http404("Event does not exist")
+    edits_created = event.edits_created.all()
+    edits_approved = event.edits_approved.all()
+    edits_refused = event.edits_refused.all()
+    edits_created_and_approved = list(set(edits_created).intersection(edits_approved))
+    edits_only_created = [
+        edit for edit in edits_created if edit not in edits_created_and_approved
+    ]
+    edits_only_approved = [
+        edit for edit in edits_approved if edit not in edits_created_and_approved
+    ]
+    return render(
+        request,
+        "jsondataferretexampleapp/admin/event/index.html",
+        {
+            "event": event,
+            "edits_created": edits_created,
+            "edits_approved": edits_approved,
+            "edits_refused": edits_refused,
+            "edits_only_created": edits_only_created,
+            "edits_only_approved": edits_only_approved,
+            "edits_created_and_approved": edits_created_and_approved,
+        },
     )

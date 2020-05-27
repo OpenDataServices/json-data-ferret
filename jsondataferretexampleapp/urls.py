@@ -108,8 +108,19 @@ urlpatterns = [
         name="jsondataferretexampleapp_admin_project_moderate",
     ),
     path(
+        "admin/project/<public_id>/history",
+        views.admin_project_history,
+        name="jsondataferretexampleapp_admin_project_history",
+    ),
+    path(
         "admin/new_project",
         views.admin_projects_new,
         name="jsondataferretexampleapp_admin_project_new",
+    ),
+    ########################### Admin - Event
+    path(
+        "admin/event/<event_id>",
+        views.admin_event_index,
+        name="jsondataferretexampleapp_admin_event_index",
     ),
 ]
