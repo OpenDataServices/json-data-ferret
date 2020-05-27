@@ -246,6 +246,25 @@ def record_import_form(request, type_id, record_id):
     return render(request, "jsondataferret/type/record/import_form.html", context)
 
 
+@login_required
+def record_event_list(request, type_id, record_id):
+    try:
+        type = Type.objects.get(public_id=type_id)
+        record = Record.objects.get(type=type, public_id=record_id)
+    except Type.DoesNotExist:
+        raise Http404("Type does not exist")
+    except Record.DoesNotExist:
+        raise Http404("Record does not exist")
+
+    events = Event.objects.filter_by_record(record)
+
+    return render(
+        request,
+        "jsondataferret/type/record/events.html",
+        {"type": type, "record": record, "events": events},
+    )
+
+
 ############################ Events
 
 

@@ -38,6 +38,22 @@ class Record(models.Model):
         )
 
 
+class EventManager(models.Manager):
+    def filter_by_record(self, record):
+        return Event.objects.raw(
+            "SELECT jsondataferret_event.* "
+            + "FROM jsondataferret_event "
+            + "JOIN jsondataferret_edit ON "
+            + "jsondataferret_edit.creation_event_id = jsondataferret_event.id OR "
+            + "jsondataferret_edit.refusal_event_id = jsondataferret_event.id OR "
+            + "jsondataferret_edit.approval_event_id = jsondataferret_event.id "
+            + "WHERE jsondataferret_edit.record_id = %s "
+            + "GROUP BY jsondataferret_event.id "
+            + "ORDER bY jsondataferret_event.created ASC",
+            [record.id],
+        )
+
+
 class Event(models.Model):
     public_id = models.CharField(max_length=200, unique=True)
     created = models.DateTimeField(auto_now_add=True)
@@ -45,6 +61,7 @@ class Event(models.Model):
         settings.AUTH_USER_MODEL, on_delete=models.PROTECT, null=True, blank=True
     )
     comment = models.TextField(default="")
+    objects = EventManager()
 
 
 class Edit(models.Model):

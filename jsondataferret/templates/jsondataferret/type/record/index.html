@@ -48,5 +48,6 @@
     <p><a href="{% url 'jsondataferret_record_import_form' type_id=type.public_id record_id=record.public_id %}" class="btn btn-primary">Import Spreadsheet</a></p>
 {% endif %}
 <p><a href="{% url 'jsondataferret_record_moderate' type_id=type.public_id record_id=record.public_id %}" class="btn btn-primary">Moderate</a></p>
+<p><a href="{% url 'jsondataferret_record_event_list' type_id=type.public_id record_id=record.public_id %}" class="btn btn-primary">Events</a></p>
 
 {% endblock %}
