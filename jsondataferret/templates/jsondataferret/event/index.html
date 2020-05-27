@@ -17,11 +17,41 @@
         </tr>
      </table>
 
-    {% if edits_created %}
+    {% if edits_created_and_approved %}
 
-        <h3>New Edits</h3>
+        <h3>Edits Created and Approved at same time</h3>
 
-        {% for edit in edits_created %}
+        {% for edit in edits_created_and_approved %}
+            <table class="table">
+                <tr>
+                    <th>Mode</th>
+                    <td>{{ edit.mode }}</td>
+                </tr>
+                <tr>
+                    <th>Key</th>
+                    <td>{{ edit.data_key }}</td>
+                </tr>
+                <tr>
+                    <th>Data</th>
+                    <td>{{ edit.get_data_html|safe }}</td>
+                </tr>
+                <tr>
+                    <th>Record</th>
+                    <td>
+                        {{ edit.record.type.title }} /  {{ edit.record.public_id }}
+                        <a href="{% url 'jsondataferret_record_index' type_id=edit.record.type.public_id record_id=edit.record.public_id %}" class="btn btn-primary">View</a>
+                    </td>
+                </tr>
+            </table>
+        {% endfor %}
+
+    {% endif %}
+
+    {% if edits_only_created %}
+
+        <h3>Edits Created</h3>
+
+        {% for edit in edits_only_created %}
             <table class="table">
                 <tr>
                     <th>Mode</th>
@@ -74,11 +104,11 @@
     {% endif %}
 
 
-    {% if edits_approved %}
+    {% if edits_only_approved %}
 
          <h3>Edits Approved</h3>
 
-         {% for edit in edits_approved %}
+         {% for edit in edits_only_approved %}
             <table class="table">
                 <tr>
                     <th>Mode</th>

@@ -280,14 +280,27 @@ def event_index(request, event_id):
         event = Event.objects.get(public_id=event_id)
     except Event.DoesNotExist:
         raise Http404("Event does not exist")
+    edits_created = event.edits_created.all()
+    edits_approved = event.edits_approved.all()
+    edits_refused = event.edits_refused.all()
+    edits_created_and_approved = list(set(edits_created).intersection(edits_approved))
+    edits_only_created = [
+        edit for edit in edits_created if edit not in edits_created_and_approved
+    ]
+    edits_only_approved = [
+        edit for edit in edits_approved if edit not in edits_created_and_approved
+    ]
     return render(
         request,
         "jsondataferret/event/index.html",
         {
             "event": event,
-            "edits_created": event.edits_created.all(),
-            "edits_approved": event.edits_approved.all(),
-            "edits_refused": event.edits_refused.all(),
+            "edits_created": edits_created,
+            "edits_approved": edits_approved,
+            "edits_refused": edits_refused,
+            "edits_only_created": edits_only_created,
+            "edits_only_approved": edits_only_approved,
+            "edits_created_and_approved": edits_created_and_approved,
         },
     )
 
