@@ -18,6 +18,7 @@ class OrganisationMakePrivateForm(forms.Form):
 
 
 class ProjectNewForm(forms.Form):
+    id = forms.SlugField()
     title = forms.CharField()
 
 

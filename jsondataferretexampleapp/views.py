@@ -666,6 +666,10 @@ def admin_project_make_disputed(request, public_id):
 
 @login_required
 def admin_projects_new(request):
+    try:
+        type = Type.objects.get(public_id=TYPE_PROJECT_PUBLIC_ID)
+    except Type.DoesNotExist:
+        raise Http404("Type does not exist")
 
     # If this is a POST request then process the Form data
     if request.method == "POST":
@@ -677,22 +681,26 @@ def admin_projects_new(request):
         if form.is_valid():
             # process the data in form.cleaned_data as required
             # Save the event
-            id = str(uuid.uuid4())
-            data = NewEventData(
-                TYPE_PROJECT_PUBLIC_ID,
-                id,
-                {"project_name": {"value": form.cleaned_data["title"]},},
-                approved=True,
-            )
-            newEvent([data], user=request.user)
-
-            # redirect to a new URL:
-            return HttpResponseRedirect(
-                reverse(
-                    "jsondataferretexampleapp_admin_project_index",
-                    kwargs={"public_id": id},
+            id = form.cleaned_data["id"]
+            existing_record = Record.objects.filter(type=type, public_id=id)
+            if existing_record:
+                form.add_error("id", "This ID already exists")
+            else:
+                data = NewEventData(
+                    type,
+                    id,
+                    {"project_name": {"value": form.cleaned_data["title"]}},
+                    approved=True,
                 )
-            )
+                newEvent([data], user=request.user)
+
+                # redirect to a new URL:
+                return HttpResponseRedirect(
+                    reverse(
+                        "jsondataferretexampleapp_admin_project_index",
+                        kwargs={"public_id": id},
+                    )
+                )
 
     # If this is a GET (or any other method) create the default form.
     else:
