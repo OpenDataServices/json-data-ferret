@@ -7,6 +7,7 @@
 <p>Project {{ project.data_private.project_name.value }}</p>
 
 <table class="table">
+    <tr><th>ID</th><td>{{ project.public_id }}</td></tr>
     {% for title, value in field_data.items %}
         <tr><th>{{ title }}</th><td>{{ value }}</td></tr>
     {% endfor %}
