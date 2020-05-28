@@ -13,6 +13,12 @@ from jsondataferret import EVENT_MODE_REPLACE
 from .utils import get_field_list_from_json
 
 
+class JSONDataFerret(models.Model):
+    class Meta:
+        managed = False
+        permissions = (("admin", "Can Admin All Data Managed by JSON Data Ferret"),)
+
+
 class Type(models.Model):
     public_id = models.CharField(max_length=200, unique=True)
     title = models.CharField(max_length=200)

@@ -7,7 +7,7 @@ import pygments.formatters
 import pygments.lexers.data
 import spreadsheetforms
 from django.conf import settings
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import permission_required
 from django.http import Http404, HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
@@ -19,7 +19,7 @@ from .models import Edit, Event, Record, Type
 
 
 ############################ Index
-@login_required
+@permission_required("jsondataferret.admin")
 def index(request):
     return render(request, "jsondataferret/index.html")
 
@@ -27,13 +27,13 @@ def index(request):
 ############################ Types and Records
 
 
-@login_required
+@permission_required("jsondataferret.admin")
 def types_list(request):
     types = Type.objects.all()
     return render(request, "jsondataferret/types.html", {"types": types})
 
 
-@login_required
+@permission_required("jsondataferret.admin")
 def type_index(request, public_id):
     try:
         type = Type.objects.get(public_id=public_id)
@@ -52,7 +52,7 @@ def type_index(request, public_id):
     )
 
 
-@login_required
+@permission_required("jsondataferret.admin")
 def type_download_blank_form(request, type_id):
     try:
         type = Type.objects.get(public_id=type_id)
@@ -78,7 +78,7 @@ def type_download_blank_form(request, type_id):
     return response
 
 
-@login_required
+@permission_required("jsondataferret.admin")
 def type_record_list(request, type_id):
     try:
         type = Type.objects.get(public_id=type_id)
@@ -90,7 +90,7 @@ def type_record_list(request, type_id):
     )
 
 
-@login_required
+@permission_required("jsondataferret.admin")
 def record_index(request, type_id, record_id):
     try:
         type = Type.objects.get(public_id=type_id)
@@ -113,7 +113,7 @@ def record_index(request, type_id, record_id):
     )
 
 
-@login_required
+@permission_required("jsondataferret.admin")
 def record_moderate(request, type_id, record_id):
     try:
         type = Type.objects.get(public_id=type_id)
@@ -156,7 +156,7 @@ def record_moderate(request, type_id, record_id):
     )
 
 
-@login_required
+@permission_required("jsondataferret.admin")
 def record_download_form(request, type_id, record_id):
     try:
         type = Type.objects.get(public_id=type_id)
@@ -187,7 +187,7 @@ def record_download_form(request, type_id, record_id):
     return response
 
 
-@login_required
+@permission_required("jsondataferret.admin")
 def record_import_form(request, type_id, record_id):
     try:
         type = Type.objects.get(public_id=type_id)
@@ -249,7 +249,7 @@ def record_import_form(request, type_id, record_id):
     return render(request, "jsondataferret/type/record/import_form.html", context)
 
 
-@login_required
+@permission_required("jsondataferret.admin")
 def record_event_list(request, type_id, record_id):
     try:
         type = Type.objects.get(public_id=type_id)
@@ -271,13 +271,13 @@ def record_event_list(request, type_id, record_id):
 ############################ Events
 
 
-@login_required
+@permission_required("jsondataferret.admin")
 def event_list(request):
     events = Event.objects.all().order_by("created")
     return render(request, "jsondataferret/events.html", {"events": events})
 
 
-@login_required
+@permission_required("jsondataferret.admin")
 def event_index(request, event_id):
     try:
         event = Event.objects.get(public_id=event_id)
@@ -311,7 +311,7 @@ def event_index(request, event_id):
 ############################ Misc
 
 
-@login_required
+@permission_required("jsondataferret.admin")
 def pygments_css(request):
     response = HttpResponse(
         content=pygments.formatters.HtmlFormatter().get_style_defs(".highlight")
