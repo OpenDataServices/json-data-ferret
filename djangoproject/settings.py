@@ -164,5 +164,25 @@ JSONDATAFERRET_TYPE_INFORMATION = {
             "spreadsheetform_guides",
             "project.xlsx",
         ),
+        "fields": [
+            {"key": "/project_name/value", "title": "Project Name (value)"},
+            {"key": "/project_name/source", "title": "Project Name (source)"},
+            {"key": "/project_name/status", "title": "Project Name (status)"},
+            {"key": "/fund_name/value", "title": "Fund Name (value)"},
+            {"key": "/fund_name/source", "title": "Fund Name (source)"},
+            {"key": "/fund_name/status", "title": "Fund Name (status)"},
+            {"key": "/launch_date/value", "title": "Launch Date (value)"},
+            {"key": "/launch_date/source", "title": "Launch Date (source)"},
+            {"key": "/launch_date/status", "title": "Launch Date (status)"},
+            {
+                "type": "list",
+                "key": "/outcomes",
+                "title": "Outcomes",
+                "fields": [
+                    {"key": "/outcome", "title": "Outcome"},
+                    {"key": "/definition", "title": "Definition"},
+                ],
+            },
+        ],
     },
 }

@@ -10,6 +10,8 @@ from django.db import models
 
 from jsondataferret import EVENT_MODE_REPLACE
 
+from .utils import get_field_list_from_json
+
 
 class Type(models.Model):
     public_id = models.CharField(max_length=200, unique=True)
@@ -36,6 +38,9 @@ class Record(models.Model):
             pygments.lexers.data.JsonLexer(),
             pygments.formatters.HtmlFormatter(),
         )
+
+    def get_cached_data_fields(self):
+        return get_field_list_from_json(self.type.public_id, self.cached_data,)
 
 
 class EventManager(models.Manager):
@@ -111,3 +116,6 @@ class Edit(models.Model):
             return jsonpointer.resolve_pointer(self.data, field,)
         except jsonpointer.JsonPointerException:
             return False
+
+    def get_data_fields(self):
+        return get_field_list_from_json(self.record.type.public_id, self.data,)

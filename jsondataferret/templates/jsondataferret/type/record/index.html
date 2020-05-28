@@ -4,9 +4,20 @@
 
 <h2>Type {{ type.title }} record {{ record.public_id }}</h2>
 
+
+<h3>JSON</h3>
 <p>{{ record.get_cached_data_html | safe }}</p>
 
-
+{% with fields_to_list=record.get_cached_data_fields %}
+    {% if fields_to_list %}
+        <h3>Fields</h3>
+        <table class="table">
+            {% for field_data in fields_to_list %}
+                <tr><th>{{ field_data.title }}</th><td>{{ field_data.value }}</td></tr>
+            {% endfor %}
+        </table>
+    {% endif %}
+{% endwith %}
 
 {% if record.cached_jsonschema_validation_errors or record.cached_exists %}
     <h3>Validation</h3>

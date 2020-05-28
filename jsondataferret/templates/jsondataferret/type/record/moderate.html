@@ -24,6 +24,11 @@
                     <th>Data</th>
                     <td>{{ edit.get_data_html|safe }}</td>
                 </tr>
+                {% with fields_to_list=edit.get_data_fields %}
+                    {% for field_data in fields_to_list %}
+                        <tr><th>{{ field_data.title }}</th><td>{{ field_data.value }}</td></tr>
+                    {% endfor %}
+                {% endwith %}
                 <tr>
                     <th>Action</th>
                     <td>
