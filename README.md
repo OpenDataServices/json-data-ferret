@@ -42,6 +42,6 @@ Clean up code before commit:
 
 
 
-    isort --recursive djangoproject/ jsondataferret jsondataferretexampleapp/
-    black djangoproject/ jsondataferret jsondataferretexampleapp/
-    flake8 djangoproject/ jsondataferret jsondataferretexampleapp/
+    isort --recursive djangoproject/ jsondataferret jsondataferretexampleapp/ setup.py docs/
+    black djangoproject/ jsondataferret jsondataferretexampleapp/ setup.py docs/
+    flake8 djangoproject/ jsondataferret jsondataferretexampleapp/ setup.py docs/

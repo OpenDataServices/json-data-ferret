@@ -18,7 +18,7 @@ cd /vagrant
 virtualenv .ve -p python3
 source .ve/bin/activate;
 # pip install can fail if .ve already exists, and we don't want errors to stop buliding totally. So always pass.
-pip3 install -r requirements_dev.txt  || true
+pip3 install -e .[dev]  || true
 
 
 su --login -c "psql -c \"CREATE USER app WITH PASSWORD 'password';\"" postgres

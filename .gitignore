@@ -2,3 +2,4 @@
 /.vagrant
 __pycache__
 /static
+/dist
