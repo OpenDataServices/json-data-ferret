@@ -30,8 +30,8 @@ class NewEventRejection:
         self.edit = edit
 
 
-def newEvent(datas, user=None):
-    record_ids = newEvent_apply(datas, user=user)
+def newEvent(datas, user=None, comment=None):
+    record_ids = newEvent_apply(datas, user=user, comment=comment)
 
     for name, app in apps.app_configs.items():
         if hasattr(app.module, "JSONDATAFERRET_HOOKS"):
@@ -48,12 +48,13 @@ def newEvent(datas, user=None):
 
 
 @transaction.atomic
-def newEvent_apply(datas, user=None):
+def newEvent_apply(datas, user=None, comment=None):
     record_ids = []
 
     event = Event()
     event.public_id = uuid.uuid4()
     event.user = user
+    event.comment = comment or ""
     event.save()
 
     for data in datas:

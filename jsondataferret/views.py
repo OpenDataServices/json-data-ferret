@@ -140,7 +140,9 @@ def record_moderate(request, type_id, record_id):
                 )
 
         if actions:
-            jsondataferret.pythonapi.newevent.newEvent(actions, user=request.user)
+            jsondataferret.pythonapi.newevent.newEvent(
+                actions, user=request.user, comment=request.POST.get("comment")
+            )
 
         return HttpResponseRedirect(
             reverse(
@@ -225,7 +227,9 @@ def record_import_form(request, type_id, record_id):
                 type, record, json_data, mode=jsondataferret.EVENT_MODE_MERGE,
             )
             jsondataferret.pythonapi.newevent.newEvent(
-                [new_event_data], user=request.user
+                [new_event_data],
+                user=request.user,
+                comment=form.cleaned_data["comment"],
             )
 
             # redirect to a new URL:
