@@ -9,8 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 
 - Add way to write an event comment when making event. Show in UI (both viewing and when taking actions).
-
-
+- Add tabs UI to some pages
 
 ## [0.1.0] - 2020-05-29
 
