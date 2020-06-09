@@ -1,5 +1,8 @@
+import jsonmerge
 import jsonpointer
 from django.conf import settings
+
+from jsondataferret import EVENT_MODE_MERGE, EVENT_MODE_REPLACE
 
 
 def get_field_list_from_json(type_public_id, data):
@@ -62,3 +65,16 @@ def get_field_list_from_json_and_field_config_type_list(data, field_config):
             except jsonpointer.JsonPointerException:
                 pass
     return out
+
+
+def apply_edit_get_new_cached_data(edit):
+    if edit.mode == EVENT_MODE_REPLACE:
+        if edit.data_key == "/":
+            return edit.data
+        else:
+            raise Exception("TODO Not Implemented Yet")
+    elif edit.mode == EVENT_MODE_MERGE:
+        if edit.data_key == "/":
+            return jsonmerge.merge(edit.record.cached_data, edit.data)
+        else:
+            raise Exception("TODO Not Implemented Yet")

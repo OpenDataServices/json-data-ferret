@@ -17,6 +17,7 @@ setup(
         "Pygments",
         "jsonschema",
         "psycopg2",
+        "json-merge-patch",
     ],
     extras_require={
         "dev": ["pip-tools", "black==19.10b0", "flake8", "isort", "django-environ"]

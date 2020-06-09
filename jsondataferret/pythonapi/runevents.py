@@ -4,10 +4,9 @@ import jsonschema
 from django.apps import apps
 from django.conf import settings
 from django.db import connection
-from jsonmerge import merge
 
-from jsondataferret import EVENT_MODE_MERGE, EVENT_MODE_REPLACE
 from jsondataferret.models import Edit, Event, Record, Type
+from jsondataferret.utils import apply_edit_get_new_cached_data
 
 
 def clear_data_and_run_all_events():
@@ -41,21 +40,7 @@ def apply_event(event):
     for edit in Edit.objects.filter(approval_event=event):
 
         # --------------------------------- Make new data
-
-        newdata = edit.record.cached_data
-
-        if edit.mode == EVENT_MODE_REPLACE:
-            if edit.data_key == "/":
-                newdata = edit.data
-            else:
-                raise Exception("TODO Not Implemented Yet")
-        elif edit.mode == EVENT_MODE_MERGE:
-            if edit.data_key == "/":
-                newdata = merge(edit.record.cached_data, edit.data)
-            else:
-                raise Exception("TODO Not Implemented Yet")
-
-        edit.record.cached_data = newdata
+        edit.record.cached_data = apply_edit_get_new_cached_data(edit)
 
         # --------------------------------- Validate Result
         type_data = settings.JSONDATAFERRET_TYPE_INFORMATION.get(
@@ -68,7 +53,9 @@ def apply_event(event):
                 schema = json.load(fp)
             # TODO use correct version of Draft Validator
             schema_validator = jsonschema.Draft7Validator(schema)
-            errors = sorted(schema_validator.iter_errors(newdata), key=str)
+            errors = sorted(
+                schema_validator.iter_errors(edit.record.cached_data), key=str
+            )
             if errors:
                 edit.record.cached_jsonschema_validation_errors = [
                     {

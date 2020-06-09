@@ -1,11 +1,13 @@
 import uuid
 
+import json_merge_patch
 from django.apps import apps
 from django.db import transaction
 
 from jsondataferret import EVENT_MODE_REPLACE
 from jsondataferret.models import Edit, Event, Record, Type
 from jsondataferret.pythonapi.runevents import apply_event
+from jsondataferret.utils import apply_edit_get_new_cached_data
 
 
 class NewEventData:
@@ -18,6 +20,47 @@ class NewEventData:
         self.data = data
         self.mode = mode
         self.approved = approved
+
+    def _build_type_and_record(self, create_if_dont_exist=True):
+        # self.type and  self.record can be passed as objects or strings
+        # If strings, the objects should be loaded. If flag set, created and saved if they don't exist.
+        if isinstance(self.type, str):
+            types = Type.objects.filter(public_id=self.type)
+            if types:
+                self.type = types[0]
+            elif create_if_dont_exist:
+                type_model = Type()
+                type_model.public_id = self.type
+                type_model.title = self.type
+                type_model.save()
+                self.type = type_model
+
+        if isinstance(self.type, Type) and isinstance(self.record, str):
+            records = Record.objects.filter(type=self.type, public_id=self.record)
+            if records:
+                self.record = records[0]
+            elif create_if_dont_exist:
+                record_model = Record()
+                record_model.type = self.type
+                record_model.public_id = self.record
+                record_model.save()
+                self.record = record_model
+
+    def does_this_create_or_change_record(self):
+        self._build_type_and_record(create_if_dont_exist=False)
+        # If record not currently exist, it's creating something
+        if not isinstance(self.record, Record):
+            return True
+        # If does exist, need to check content for changes
+        edit = Edit()
+        edit.record = self.record
+        edit.mode = self.mode
+        edit.data_key = self.key
+        edit.data = self.data
+        new_cached_data = apply_edit_get_new_cached_data(edit)
+        patch = json_merge_patch.create_patch(self.record.cached_data, new_cached_data)
+        has_patch = bool(patch)
+        return has_patch
 
 
 class NewEventApproval:
@@ -61,33 +104,11 @@ def newEvent_apply(datas, user=None, comment=None):
 
         if isinstance(data, NewEventData):
 
-            if isinstance(data.type, str):
-                types = Type.objects.filter(public_id=data.type)
-                if len(types) == 0:
-                    type = Type()
-                    type.public_id = data.type
-                    type.title = data.type
-                    type.save()
-                else:
-                    type = types[0]
-            else:
-                type = data.type
-
-            if isinstance(data.record, str):
-                records = Record.objects.filter(type=type, public_id=data.record)
-                if len(records) == 0:
-                    record = Record()
-                    record.type = type
-                    record.public_id = data.record
-                    record.save()
-                else:
-                    record = records[0]
-            else:
-                record = data.record
+            data._build_type_and_record(create_if_dont_exist=True)
 
             edit = Edit()
             edit.public_id = uuid.uuid4()
-            edit.record = record
+            edit.record = data.record
             edit.creation_event = event
             if data.approved:
                 edit.approval_event = event
@@ -96,8 +117,8 @@ def newEvent_apply(datas, user=None, comment=None):
             edit.data = data.data
             edit.save()
 
-            if record.id not in record_ids:
-                record_ids.append(record.id)
+            if data.record.id not in record_ids:
+                record_ids.append(data.record.id)
 
         elif isinstance(data, NewEventApproval):
             data.edit.approval_event = event
