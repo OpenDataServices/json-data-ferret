@@ -28,6 +28,11 @@ urlpatterns = [
         name="jsondataferret_record_index",
     ),
     path(
+        "type/<type_id>/record/<record_id>/edit_json_schema",
+        views.record_edit_json_schema,
+        name="jsondataferret_record_edit_json_schema",
+    ),
+    path(
         "type/<type_id>/record/<record_id>/download_form",
         views.record_download_form,
         name="jsondataferret_record_download_form",

@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Add tabs UI to some pages
 - Add breadcrumbs
 - Add list of records that need moderation
+- Add Edit using JSON Editor and JSON Schema
 
 #### Python API
 

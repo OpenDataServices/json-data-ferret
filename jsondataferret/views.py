@@ -1,3 +1,4 @@
+import json
 import os
 import random
 import tempfile
@@ -123,6 +124,7 @@ def record_index(request, type_id, record_id):
             "type": type,
             "record": record,
             "download_form_available": bool(type_data.get("spreadsheet_form_guide")),
+            "json_schema_available": bool(type_data.get("jsonschema_file")),
         },
     )
 
@@ -169,6 +171,53 @@ def record_moderate(request, type_id, record_id):
         request,
         "jsondataferret/type/record/moderate.html",
         {"type": type, "record": record, "edits": edits},
+    )
+
+
+@permission_required("jsondataferret.admin")
+def record_edit_json_schema(request, type_id, record_id):
+    try:
+        type = Type.objects.get(public_id=type_id)
+        record = Record.objects.get(type=type, public_id=record_id)
+    except Type.DoesNotExist:
+        raise Http404("Type does not exist")
+    except Record.DoesNotExist:
+        raise Http404("Record does not exist")
+
+    if request.method == "POST":
+
+        # TODO check CSFR
+
+        data = json.loads(request.POST.get("data"))
+
+        new_event_data = jsondataferret.pythonapi.newevent.NewEventData(
+            type, record, data, mode=jsondataferret.EVENT_MODE_REPLACE,
+        )
+        jsondataferret.pythonapi.newevent.newEvent(
+            [new_event_data], user=request.user, comment=request.POST.get("comment"),
+        )
+
+        return HttpResponseRedirect(
+            reverse(
+                "jsondataferret_record_index",
+                kwargs={"type_id": type_id, "record_id": record_id},
+            )
+        )
+
+    type_data = settings.JSONDATAFERRET_TYPE_INFORMATION.get(type.public_id, {})
+
+    with open(type_data.get("jsonschema_file")) as fp:
+        schema = json.load(fp)
+
+    return render(
+        request,
+        "jsondataferret/type/record/edit_json_schema.html",
+        {
+            "type": type,
+            "record": record,
+            "data_json_string": json.dumps(record.cached_data),
+            "json_schema_string": json.dumps(schema),
+        },
     )
 
 

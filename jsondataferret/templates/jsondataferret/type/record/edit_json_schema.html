@@ -1,0 +1,83 @@
+{% extends 'jsondataferret/base.html' %}
+
+
+{% block breadcrumbs %}
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'jsondataferret_index' %}">Home</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'jsondataferret_type_list' %}">Types</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'jsondataferret_type_index' public_id=type.public_id %}">Type {{ type.title }}</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'jsondataferret_record_index' type_id=type.public_id record_id=record.public_id %}">Record {{ record.public_id }}</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Edit</li>
+      </ol>
+    </nav>
+{% endblock %}
+
+{% block content %}
+
+    <h2>Edit</h2>
+
+    <div id="editor_holder"></div>
+
+    <form action="" method="post" id="SubmissionForm" onsubmit="formonsubmit();">
+        {% csrf_token %}
+
+        <input type="hidden" value="" name="data">
+
+        <div>
+            <label>
+                Comment
+                <textarea name="comment"></textarea>
+            </label>
+        </div>
+
+        <input type="submit" value="Save">
+
+    </form>
+
+
+{% endblock %}
+
+{% block javascript %}
+    <script src="https://cdn.jsdelivr.net/npm/@json-editor/json-editor@2.2.1/dist/jsoneditor.min.js"></script>
+    <script>
+        var data = JSON.parse("{{ data_json_string | escapejs }}");
+        var schema = JSON.parse("{{ json_schema_string | escapejs }}");
+
+
+        const editor_options = {
+            startval: data,
+            schema: schema,
+            theme:'bootstrap4',
+            iconlib: "fontawesome5"
+        };
+
+        var editor;
+
+        function update() {
+            $('#SubmissionForm input[name="data"]').val(JSON.stringify(editor.getValue(),null,2));
+        };
+
+        function beforeunload(e) {
+            // Cancel the event
+            e.preventDefault(); // If you prevent default behavior in Mozilla Firefox prompt will always be shown
+            // Chrome requires returnValue to be set
+            e.returnValue = '';
+        }
+
+        function formonsubmit() {
+            window.removeEventListener('beforeunload', beforeunload);
+        }
+
+        $( document ).ready(function() {
+            var element = document.getElementById('editor_holder');
+            editor = new JSONEditor(element, editor_options);
+            editor.on('change',update);
+            update();
+
+            // https://developer.mozilla.org/en-US/docs/Web/API/WindowEventHandlers/onbeforeunload
+            window.addEventListener('beforeunload', beforeunload);
+        });
+
+    </script>
+{% endblock %}

@@ -84,7 +84,9 @@
     </div>
 {% endwith %}
 
-
+{% if json_schema_available %}
+    <p><a href="{% url 'jsondataferret_record_edit_json_schema' type_id=type.public_id record_id=record.public_id %}" class="btn btn-primary">Edit</a></p>
+{% endif %}
 {% if download_form_available %}
     <p><a href="{% url 'jsondataferret_record_download_form' type_id=type.public_id record_id=record.public_id %}" class="btn btn-primary">Download as Spreadsheet</a></p>
     <p><a href="{% url 'jsondataferret_record_import_form' type_id=type.public_id record_id=record.public_id %}" class="btn btn-primary">Import Spreadsheet</a></p>
