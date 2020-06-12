@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Add way to write an event comment when making event. Show in UI (both viewing and when taking actions).
 - Add tabs UI to some pages
+- Add breadcrumbs
 - Add list of records that need moderation
 
 #### Python API

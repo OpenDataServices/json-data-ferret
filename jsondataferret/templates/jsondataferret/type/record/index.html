@@ -1,5 +1,16 @@
 {% extends 'jsondataferret/base.html' %}
 
+{% block breadcrumbs %}
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'jsondataferret_index' %}">Home</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'jsondataferret_type_list' %}">Types</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'jsondataferret_type_index' public_id=type.public_id %}">Type {{ type.title }}</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Record {{ record.public_id }}</li>
+      </ol>
+    </nav>
+{% endblock %}
+
 {% block content %}
 
 <h2>Type {{ type.title }} record {{ record.public_id }}</h2>

@@ -2,6 +2,18 @@
 
 
 
+{% block breadcrumbs %}
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'jsondataferret_index' %}">Home</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'jsondataferret_type_list' %}">Types</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'jsondataferret_type_index' public_id=type.public_id %}">Type {{ type.title }}</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'jsondataferret_record_index' type_id=type.public_id record_id=record.public_id %}">Record {{ record.public_id }}</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Import Form</li>
+      </ol>
+    </nav>
+{% endblock %}
+
 {% block content %}
   <form action="" method="post" enctype="multipart/form-data">
     {% csrf_token %}
