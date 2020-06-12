@@ -25,12 +25,29 @@ class Type(models.Model):
     created = models.DateTimeField(auto_now_add=True)
 
 
+class RecordManager(models.Manager):
+    def filter_needs_moderation_by_type(self, type_model):
+        return Record.objects.raw(
+            "SELECT jsondataferret_record.* "
+            + "FROM jsondataferret_record "
+            + "JOIN jsondataferret_edit ON "
+            + "jsondataferret_edit.record_id = jsondataferret_record.id AND "
+            + "jsondataferret_edit.refusal_event_id IS NULL AND "
+            + "jsondataferret_edit.approval_event_id IS NULL "
+            + "WHERE jsondataferret_record.type_id = %s "
+            + "GROUP BY jsondataferret_record.id "
+            + "ORDER BY jsondataferret_record.id ASC",
+            [type_model.id],
+        )
+
+
 class Record(models.Model):
     type = models.ForeignKey(Type, on_delete=models.PROTECT)
     public_id = models.CharField(max_length=200)
     cached_exists = models.BooleanField(default=False)
     cached_data = JSONField(default=dict)
     cached_jsonschema_validation_errors = JSONField(null=True, blank=True)
+    objects = RecordManager()
 
     class Meta:
         unique_together = (

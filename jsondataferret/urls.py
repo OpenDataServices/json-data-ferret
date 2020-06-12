@@ -18,6 +18,11 @@ urlpatterns = [
         name="jsondataferret_type_record_list",
     ),
     path(
+        "type/<type_id>/record_needs_moderation",
+        views.type_record_list_needs_moderation,
+        name="jsondataferret_type_record_list_needs_moderation",
+    ),
+    path(
         "type/<type_id>/record/<record_id>",
         views.record_index,
         name="jsondataferret_record_index",

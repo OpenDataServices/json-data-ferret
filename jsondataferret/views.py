@@ -91,6 +91,20 @@ def type_record_list(request, type_id):
 
 
 @permission_required("jsondataferret.admin")
+def type_record_list_needs_moderation(request, type_id):
+    try:
+        type = Type.objects.get(public_id=type_id)
+    except Type.DoesNotExist:
+        raise Http404("Type does not exist")
+    records = Record.objects.filter_needs_moderation_by_type(type)
+    return render(
+        request,
+        "jsondataferret/type/records_needing_moderation.html",
+        {"type": type, "records": records},
+    )
+
+
+@permission_required("jsondataferret.admin")
 def record_index(request, type_id, record_id):
     try:
         type = Type.objects.get(public_id=type_id)

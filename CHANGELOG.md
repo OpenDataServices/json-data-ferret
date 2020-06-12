@@ -8,10 +8,17 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 
+#### Features
+
 - Add way to write an event comment when making event. Show in UI (both viewing and when taking actions).
 - Add tabs UI to some pages
-- Added apply_edit_get_new_cached_data to utils
-- Added does_this_create_or_change_record to NewEventData
+- Add list of records that need moderation
+
+#### Python API
+
+- Add apply_edit_get_new_cached_data to utils
+- Add does_this_create_or_change_record to NewEventData
+- Add Record.objects.filter_needs_moderation_by_type
 
 ## [0.1.0] - 2020-05-29
 
