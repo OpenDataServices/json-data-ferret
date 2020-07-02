@@ -124,7 +124,7 @@ def record_index(request, type_id, record_id):
             "type": type,
             "record": record,
             "download_form_available": bool(type_data.get("spreadsheet_form_guide")),
-            "json_schema_available": bool(type_data.get("jsonschema_file")),
+            "json_schema_available": bool(type_data.get("json_schema")),
         },
     )
 
@@ -206,9 +206,6 @@ def record_edit_json_schema(request, type_id, record_id):
 
     type_data = settings.JSONDATAFERRET_TYPE_INFORMATION.get(type.public_id, {})
 
-    with open(type_data.get("jsonschema_file")) as fp:
-        schema = json.load(fp)
-
     return render(
         request,
         "jsondataferret/type/record/edit_json_schema.html",
@@ -216,7 +213,7 @@ def record_edit_json_schema(request, type_id, record_id):
             "type": type,
             "record": record,
             "data_json_string": json.dumps(record.cached_data),
-            "json_schema_string": json.dumps(schema),
+            "json_schema_string": json.dumps(type_data.get("json_schema")),
         },
     )
 

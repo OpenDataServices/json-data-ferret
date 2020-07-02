@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
+import json
 import os
 
 import environ
@@ -142,11 +143,22 @@ FILE_UPLOAD_HANDLERS = ["django.core.files.uploadhandler.TemporaryFileUploadHand
 
 JSONDATAFERRET_SPREADSHEET_FORM_DATE_FORMAT = "%Y-%m-%d"
 
+with open(
+    os.path.join(
+        BASE_DIR, "jsondataferretexampleapp", "jsonschema", "organisation.json"
+    )
+) as fp:
+    org_json_schema = json.load(fp)
+
+with open(
+    os.path.join(BASE_DIR, "jsondataferretexampleapp", "jsonschema", "project.json")
+) as fp:
+    project_json_schema = json.load(fp)
+
+
 JSONDATAFERRET_TYPE_INFORMATION = {
     "org": {
-        "jsonschema_file": os.path.join(
-            BASE_DIR, "jsondataferretexampleapp", "jsonschema", "organisation.json"
-        ),
+        "json_schema": org_json_schema,
         "spreadsheet_form_guide": os.path.join(
             BASE_DIR,
             "jsondataferretexampleapp",
@@ -155,9 +167,7 @@ JSONDATAFERRET_TYPE_INFORMATION = {
         ),
     },
     "project": {
-        "jsonschema_file": os.path.join(
-            BASE_DIR, "jsondataferretexampleapp", "jsonschema", "project.json"
-        ),
+        "json_schema": project_json_schema,
         "spreadsheet_form_guide": os.path.join(
             BASE_DIR,
             "jsondataferretexampleapp",

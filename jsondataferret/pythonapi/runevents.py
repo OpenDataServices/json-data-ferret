@@ -1,5 +1,3 @@
-import json
-
 import jsonschema
 from django.apps import apps
 from django.conf import settings
@@ -46,13 +44,9 @@ def apply_event(event):
         type_data = settings.JSONDATAFERRET_TYPE_INFORMATION.get(
             edit.record.type.public_id, {}
         )
-        if type_data.get("jsonschema_file"):
-
-            # TODO cache this somewhere, but Linux will do that by itself so not to worried
-            with open(type_data.get("jsonschema_file")) as fp:
-                schema = json.load(fp)
+        if type_data.get("json_schema"):
             # TODO use correct version of Draft Validator
-            schema_validator = jsonschema.Draft7Validator(schema)
+            schema_validator = jsonschema.Draft7Validator(type_data.get("json_schema"))
             errors = sorted(
                 schema_validator.iter_errors(edit.record.cached_data), key=str
             )
