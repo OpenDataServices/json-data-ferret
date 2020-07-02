@@ -1,6 +1,7 @@
 import json
 
 import jsonpointer
+import jsonschema
 import pygments
 import pygments.formatters
 import pygments.lexers.data
@@ -64,6 +65,26 @@ class Record(models.Model):
 
     def get_cached_data_fields(self):
         return get_field_list_from_json(self.type.public_id, self.cached_data,)
+
+    def validate_with_json_schema(self, json_schema):
+        # TODO use correct version of Draft Validator
+        schema_validator = jsonschema.Draft7Validator(json_schema)
+        errors = sorted(schema_validator.iter_errors(self.cached_data), key=str)
+        if errors:
+            self.cached_jsonschema_validation_errors = [
+                {
+                    "message": err.message,
+                    "path": list(err.path),
+                    "path_str": "/".join([str(element) for element in list(err.path)]),
+                    "schema_path": list(err.schema_path),
+                    "schema_path_str": "/".join(
+                        [str(element) for element in list(err.schema_path)]
+                    ),
+                }
+                for err in errors
+            ]
+        else:
+            self.cached_jsonschema_validation_errors = None
 
 
 class EventManager(models.Manager):

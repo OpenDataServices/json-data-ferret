@@ -1,4 +1,3 @@
-import jsonschema
 from django.apps import apps
 from django.conf import settings
 from django.db import connection
@@ -45,28 +44,7 @@ def apply_event(event):
             edit.record.type.public_id, {}
         )
         if type_data.get("json_schema"):
-            # TODO use correct version of Draft Validator
-            schema_validator = jsonschema.Draft7Validator(type_data.get("json_schema"))
-            errors = sorted(
-                schema_validator.iter_errors(edit.record.cached_data), key=str
-            )
-            if errors:
-                edit.record.cached_jsonschema_validation_errors = [
-                    {
-                        "message": err.message,
-                        "path": list(err.path),
-                        "path_str": "/".join(
-                            [str(element) for element in list(err.path)]
-                        ),
-                        "schema_path": list(err.schema_path),
-                        "schema_path_str": "/".join(
-                            [str(element) for element in list(err.schema_path)]
-                        ),
-                    }
-                    for err in errors
-                ]
-            else:
-                edit.record.cached_jsonschema_validation_errors = None
+            edit.record.validate_with_json_schema(type_data.get("json_schema"))
         else:
             edit.record.cached_jsonschema_validation_errors = None
 

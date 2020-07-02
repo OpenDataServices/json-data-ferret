@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Add breadcrumbs
 - Add list of records that need moderation
 - Add Edit using JSON Editor and JSON Schema
+- New command `updatejsonschemavalidations` - after a JSON Schema has changed, run to update all relevant cached information.
 
 #### Python API
 
