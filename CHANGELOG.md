@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [0.2.0] - 2020-07-02
+
 ### Changed
 
 - In settings, `jsonschema_file` key changed to `json_schema`. Contents should now be the actual schema, not a filename.
