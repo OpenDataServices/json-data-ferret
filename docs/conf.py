@@ -1,3 +1,3 @@
-project = "json-data-ferret"
+project = "JSON Data Ferret"
 
 master_doc = "index"
