@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Changed
+
+- In web UI, order records
+
 ## [0.2.0] - 2020-07-02
 
 ### Changed

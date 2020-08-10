@@ -85,7 +85,7 @@ def type_record_list(request, type_id):
         type = Type.objects.get(public_id=type_id)
     except Type.DoesNotExist:
         raise Http404("Type does not exist")
-    records = Record.objects.filter(type=type)
+    records = Record.objects.filter(type=type).order_by("public_id")
     return render(
         request, "jsondataferret/type/records.html", {"type": type, "records": records}
     )
