@@ -10,6 +10,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - In web UI, order records
 
+### Added
+
+- In web UI, show more info when moderating records
+
 ## [0.2.0] - 2020-07-02
 
 ### Changed
