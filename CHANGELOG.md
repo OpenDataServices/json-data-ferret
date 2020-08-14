@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 
 - In web UI, show more info when moderating records
+- In web UI, paginate list of events and records
 
 ## [0.2.0] - 2020-07-02
 

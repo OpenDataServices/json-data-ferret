@@ -9,6 +9,7 @@ import pygments.lexers.data
 import spreadsheetforms
 from django.conf import settings
 from django.contrib.auth.decorators import permission_required
+from django.core.paginator import Paginator
 from django.http import Http404, HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
@@ -86,8 +87,13 @@ def type_record_list(request, type_id):
     except Type.DoesNotExist:
         raise Http404("Type does not exist")
     records = Record.objects.filter(type=type).order_by("public_id")
+    paginator = Paginator(records, 100)
+    page_number = request.GET.get("page")
+    page_obj = paginator.get_page(page_number)
     return render(
-        request, "jsondataferret/type/records.html", {"type": type, "records": records}
+        request,
+        "jsondataferret/type/records.html",
+        {"type": type, "page_obj": page_obj},
     )
 
 
@@ -98,10 +104,13 @@ def type_record_list_needs_moderation(request, type_id):
     except Type.DoesNotExist:
         raise Http404("Type does not exist")
     records = Record.objects.filter_needs_moderation_by_type(type)
+    paginator = Paginator(records, 100)
+    page_number = request.GET.get("page")
+    page_obj = paginator.get_page(page_number)
     return render(
         request,
         "jsondataferret/type/records_needing_moderation.html",
-        {"type": type, "records": records},
+        {"type": type, "page_obj": page_obj},
     )
 
 
@@ -338,7 +347,10 @@ def record_event_list(request, type_id, record_id):
 @permission_required("jsondataferret.admin")
 def event_list(request):
     events = Event.objects.all().order_by("created")
-    return render(request, "jsondataferret/events.html", {"events": events})
+    paginator = Paginator(events, 100)
+    page_number = request.GET.get("page")
+    page_obj = paginator.get_page(page_number)
+    return render(request, "jsondataferret/events.html", {"page_obj": page_obj})
 
 
 @permission_required("jsondataferret.admin")
