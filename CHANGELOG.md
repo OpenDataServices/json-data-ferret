@@ -14,6 +14,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - In web UI, show more info when moderating records
 - In web UI, paginate list of events and records
+- In web UI, add heading on event details page so if 
+  there is more than one edit it's easier to see where one edit stops and the next one begins.
 
 ## [0.2.0] - 2020-07-02
 
