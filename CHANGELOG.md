@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - In web UI, paginate list of events and records
 - In web UI, add heading on event details page so if 
   there is more than one edit it's easier to see where one edit stops and the next one begins.
+- New function and CLI command to purge a record from database entirely
 
 ## [0.2.0] - 2020-07-02
 
