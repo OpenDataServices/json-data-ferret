@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Fixed
+
+- In web UI, on event detail page is said "Edits Approved" when it should have said "Edits Refused"
+
 ### Changed
 
 - In web UI, order records
@@ -14,6 +18,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - In web UI, show more info when moderating records
 - In web UI, paginate list of events and records
+- In web UI, add heading on event details page so if 
+  there is more than one edit it's easier to see where one edit stops and the next one begins.
+- New function and CLI command to purge a record from database entirely
 
 ## [0.2.0] - 2020-07-02
 
