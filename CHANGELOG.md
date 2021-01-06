@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+
+## [0.3.0] - 2021-01-06
+
 ### Fixed
 
 - In web UI, on event detail page is said "Edits Approved" when it should have said "Edits Refused"
