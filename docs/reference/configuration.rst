@@ -1,6 +1,9 @@
 Configuration
 =============
 
+Types
+-----
+
 Some configuration options for each different type can be set in the normal Django configuration.
 
 .. code-block:: python
@@ -20,7 +23,7 @@ Some configuration options for each different type can be set in the normal Djan
 The key for each type (eg `type1`, `type2`) should match the `public_id` field in the `Type` record in the database.
 
 JSON Schema
------------
+~~~~~~~~~~~
 
 If this is set,
 
@@ -42,7 +45,7 @@ The value should be the actual JSON Schema as a python dictionary. You will prob
 This is optional; if not set basic operations will still work.
 
 Spreadsheet Guide Form
-----------------------
+~~~~~~~~~~~~~~~~~~~~~~
 
 If this is set,
 
@@ -55,7 +58,7 @@ The value should be the filename of the spreadsheet. Ideally make it a absolute 
 This is optional; if not set basic operations will still work.
 
 Fields
-------
+~~~~~~
 
 If this is set,
 

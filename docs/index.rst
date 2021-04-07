@@ -5,6 +5,6 @@ JSON Data Ferret
    :maxdepth: 2
 
    introduction.rst
-   configuration.rst
-   user_accounts.rst
-   vagrant_for_dev.rst
+   explanation/index.rst
+   how-to-guide/index.rst
+   reference/index.rst
