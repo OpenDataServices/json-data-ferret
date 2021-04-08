@@ -41,7 +41,7 @@ You can now use the Python API and read the models of this library as you requir
 Web UI
 ------
 
-If you want people to be able to use this, you must enable this and give user accounts permission.
+If you want people to be able to use the Web UI, you must first enable it and give the relevant user accounts permission.
 
 In your Django app's urls file add:
 
@@ -53,5 +53,6 @@ In your Django app's urls file add:
         ...
     ]
 
-For each user you want to be able to use this web UI, you need to give them the correct permission. You can do this by any usual Django means - logging in to admin interface as a super user is probably easiest.
+You need to set the correct permissions for each user of the web UI. You can do this by any means Django allows - e.g. logging into the admin interface as a superuser.
+:doc:`See the reference for more <../reference/user-accounts>`
 
