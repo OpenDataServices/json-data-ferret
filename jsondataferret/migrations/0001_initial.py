@@ -64,7 +64,9 @@ class Migration(migrations.Migration):
                     ),
                 ),
             ],
-            options={"unique_together": {("type", "public_id")},},
+            options={
+                "unique_together": {("type", "public_id")},
+            },
         ),
         migrations.CreateModel(
             name="Event",

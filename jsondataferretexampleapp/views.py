@@ -77,7 +77,9 @@ def organisation_index(request, public_id):
 def projects_list(request):
     projects = Project.objects.filter(exists=True, status_public=True)
     return render(
-        request, "jsondataferretexampleapp/projects.html", {"projects": projects},
+        request,
+        "jsondataferretexampleapp/projects.html",
+        {"projects": projects},
     )
 
 
@@ -358,7 +360,9 @@ def admin_organisations_new(request):
             data = NewEventData(
                 TYPE_ORGANISATION_PUBLIC_ID,
                 id,
-                {"title": form.cleaned_data["title"],},
+                {
+                    "title": form.cleaned_data["title"],
+                },
                 approved=True,
             )
             newEvent([data], user=request.user)
@@ -457,7 +461,9 @@ def admin_projects_list(request):
         raise Http404("Type does not exist")
     projects = Record.objects.filter(type=type)
     return render(
-        request, "jsondataferretexampleapp/admin/projects.html", {"projects": projects},
+        request,
+        "jsondataferretexampleapp/admin/projects.html",
+        {"projects": projects},
     )
 
 
@@ -619,7 +625,9 @@ def admin_project_make_private(request, public_id):
     }
 
     return render(
-        request, "jsondataferretexampleapp/admin/project/make_private.html", context,
+        request,
+        "jsondataferretexampleapp/admin/project/make_private.html",
+        context,
     )
 
 
@@ -668,7 +676,9 @@ def admin_project_make_disputed(request, public_id):
     }
 
     return render(
-        request, "jsondataferretexampleapp/admin/project/make_disputed.html", context,
+        request,
+        "jsondataferretexampleapp/admin/project/make_disputed.html",
+        context,
     )
 
 

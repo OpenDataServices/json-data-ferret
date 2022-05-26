@@ -64,7 +64,10 @@ class Record(models.Model):
         )
 
     def get_cached_data_fields(self):
-        return get_field_list_from_json(self.type.public_id, self.cached_data,)
+        return get_field_list_from_json(
+            self.type.public_id,
+            self.cached_data,
+        )
 
     def validate_with_json_schema(self, json_schema):
         # TODO use correct version of Draft Validator
@@ -150,16 +153,27 @@ class Edit(models.Model):
     def has_data_field(self, field):
         # TODO work with data_key field.
         try:
-            return bool(jsonpointer.resolve_pointer(self.data, field,))
+            return bool(
+                jsonpointer.resolve_pointer(
+                    self.data,
+                    field,
+                )
+            )
         except jsonpointer.JsonPointerException:
             return False
 
     def get_data_field(self, field):
         # TODO work with data_key field.
         try:
-            return jsonpointer.resolve_pointer(self.data, field,)
+            return jsonpointer.resolve_pointer(
+                self.data,
+                field,
+            )
         except jsonpointer.JsonPointerException:
             return False
 
     def get_data_fields(self):
-        return get_field_list_from_json(self.record.type.public_id, self.data,)
+        return get_field_list_from_json(
+            self.record.type.public_id,
+            self.data,
+        )

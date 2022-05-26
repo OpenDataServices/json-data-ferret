@@ -17,7 +17,11 @@ urlpatterns = [
         name="jsondataferretexampleapp_organisation_index",
     ),
     ########################### Public - Project
-    path("project", views.projects_list, name="jsondataferretexampleapp_project_list",),
+    path(
+        "project",
+        views.projects_list,
+        name="jsondataferretexampleapp_project_list",
+    ),
     path(
         "project/<public_id>",
         views.project_index,

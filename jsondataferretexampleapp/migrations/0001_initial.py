@@ -35,7 +35,9 @@ class Migration(migrations.Migration):
                     django.contrib.postgres.fields.jsonb.JSONField(default=dict),
                 ),
             ],
-            options={"abstract": False,},
+            options={
+                "abstract": False,
+            },
         ),
         migrations.CreateModel(
             name="Project",
@@ -61,6 +63,8 @@ class Migration(migrations.Migration):
                     django.contrib.postgres.fields.jsonb.JSONField(default=dict),
                 ),
             ],
-            options={"abstract": False,},
+            options={
+                "abstract": False,
+            },
         ),
     ]

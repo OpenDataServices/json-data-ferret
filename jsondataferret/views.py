@@ -200,10 +200,15 @@ def record_edit_json_schema(request, type_id, record_id):
         data = json.loads(request.POST.get("data"))
 
         new_event_data = jsondataferret.pythonapi.newevent.NewEventData(
-            type, record, data, mode=jsondataferret.EVENT_MODE_REPLACE,
+            type,
+            record,
+            data,
+            mode=jsondataferret.EVENT_MODE_REPLACE,
         )
         jsondataferret.pythonapi.newevent.newEvent(
-            [new_event_data], user=request.user, comment=request.POST.get("comment"),
+            [new_event_data],
+            user=request.user,
+            comment=request.POST.get("comment"),
         )
 
         return HttpResponseRedirect(
@@ -293,7 +298,10 @@ def record_import_form(request, type_id, record_id):
             # process the data in form.cleaned_data as required (here we just write it to the model due_back field)
             # Save the event
             new_event_data = jsondataferret.pythonapi.newevent.NewEventData(
-                type, record, json_data, mode=jsondataferret.EVENT_MODE_MERGE,
+                type,
+                record,
+                json_data,
+                mode=jsondataferret.EVENT_MODE_MERGE,
             )
             jsondataferret.pythonapi.newevent.newEvent(
                 [new_event_data],

@@ -20,6 +20,6 @@ setup(
         "json-merge-patch",
     ],
     extras_require={
-        "dev": ["pip-tools", "black==19.10b0", "flake8", "isort", "django-environ"]
+        "dev": ["pip-tools", "black==22.3", "flake8", "isort", "django-environ"]
     },
 )

@@ -12,25 +12,41 @@ class BaseModel(models.Model):
 
     def has_data_public_field(self, field):
         try:
-            return bool(jsonpointer.resolve_pointer(self.data_public, field,))
+            return bool(
+                jsonpointer.resolve_pointer(
+                    self.data_public,
+                    field,
+                )
+            )
         except jsonpointer.JsonPointerException:
             return False
 
     def get_data_public_field(self, field):
         try:
-            return jsonpointer.resolve_pointer(self.data_public, field,)
+            return jsonpointer.resolve_pointer(
+                self.data_public,
+                field,
+            )
         except jsonpointer.JsonPointerException:
             return ""
 
     def has_data_private_field(self, field):
         try:
-            return bool(jsonpointer.resolve_pointer(self.data_private, field,))
+            return bool(
+                jsonpointer.resolve_pointer(
+                    self.data_private,
+                    field,
+                )
+            )
         except jsonpointer.JsonPointerException:
             return False
 
     def get_data_private_field(self, field):
         try:
-            return jsonpointer.resolve_pointer(self.data_private, field,)
+            return jsonpointer.resolve_pointer(
+                self.data_private,
+                field,
+            )
         except jsonpointer.JsonPointerException:
             return ""
 
