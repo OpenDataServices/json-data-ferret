@@ -11,7 +11,7 @@ setup(
     license="MIT",
     description="Django App for managing JSON Data",
     install_requires=[
-        "Django",
+        "Django>=3.2",
         "jsonmerge",
         "spreadsheetforms",
         "Pygments",
@@ -22,4 +22,5 @@ setup(
     extras_require={
         "dev": ["pip-tools", "black==22.3", "flake8", "isort", "django-environ"]
     },
+    python_requires=">=3.8",
 )

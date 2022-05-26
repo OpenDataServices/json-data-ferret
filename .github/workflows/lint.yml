@@ -1,24 +1,12 @@
-name: CI
+name: Lint
 on: [push, pull_request]
 
 jobs:
-  build:
+  lint:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: [3.6, 3.7, 3.8]
-    services:
-      postgres:
-        image: postgres:11
-        env:
-          POSTGRES_PASSWORD: postgres
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-        ports:
-          - 5432:5432
+        python-version: [3.8]
     steps:
     - uses: actions/checkout@v2
     - uses: actions/setup-python@v1
@@ -37,10 +25,3 @@ jobs:
       if: always()
     - run: flake8
       if: always()
-    - env:
-        JSONDATAFERRET_DATABASE_NAME: postgres
-        JSONDATAFERRET_DATABASE_USER: postgres
-        JSONDATAFERRET_DATABASE_PASSWORD: postgres
-      run: python manage.py test
-      if: always()
-
