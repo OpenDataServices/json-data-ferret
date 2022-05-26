@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Fixed
 
 - Field type changed to Django JSONField, to be compatible with Django 3.2 and 4
+- Lock default_auto_field to AutoField
 
 ### Changed
 
