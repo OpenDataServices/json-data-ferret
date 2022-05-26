@@ -1,5 +1,4 @@
 import jsonpointer
-from django.contrib.postgres.fields import JSONField
 from django.db import models
 
 
@@ -7,8 +6,8 @@ class BaseModel(models.Model):
     public_id = models.CharField(max_length=200, unique=True)
     exists = models.BooleanField(default=False)
     status_public = models.BooleanField(default=False)
-    data_public = JSONField(default=dict)
-    data_private = JSONField(default=dict)
+    data_public = models.JSONField(default=dict)
+    data_private = models.JSONField(default=dict)
 
     def has_data_public_field(self, field):
         try:

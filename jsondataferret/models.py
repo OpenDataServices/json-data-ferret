@@ -6,7 +6,6 @@ import pygments
 import pygments.formatters
 import pygments.lexers.data
 from django.conf import settings
-from django.contrib.postgres.fields import JSONField
 from django.db import models
 
 from jsondataferret import EVENT_MODE_REPLACE
@@ -46,8 +45,8 @@ class Record(models.Model):
     type = models.ForeignKey(Type, on_delete=models.PROTECT)
     public_id = models.CharField(max_length=200)
     cached_exists = models.BooleanField(default=False)
-    cached_data = JSONField(default=dict)
-    cached_jsonschema_validation_errors = JSONField(null=True, blank=True)
+    cached_data = models.JSONField(default=dict)
+    cached_jsonschema_validation_errors = models.JSONField(null=True, blank=True)
     objects = RecordManager()
 
     class Meta:
@@ -141,7 +140,7 @@ class Edit(models.Model):
     # the changes in the edit
     mode = models.CharField(max_length=200, default=EVENT_MODE_REPLACE)
     data_key = models.TextField(default="/")
-    data = JSONField(default=dict)
+    data = models.JSONField(default=dict)
 
     def get_data_html(self):
         return pygments.highlight(
