@@ -4,10 +4,10 @@
 
 {% block content %}
 
-<p>Project {{ project.data_public.title }}</p>
+<p>Project {{ data.data_public.project_name.value }}</p>
 
 <table class="table">
-    <tr><th>ID</th><td>{{ project.public_id }}</td></tr>
+    <tr><th>ID</th><td>{{ data.public_id }}</td></tr>
     {% for title, value in field_data.items %}
         <tr><th>{{ title }}</th><td>{{ value }}</td></tr>
     {% endfor %}

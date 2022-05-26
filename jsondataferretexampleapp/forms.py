@@ -1,34 +1,20 @@
 from django import forms
 
+COMMENT_LABEL = "Comment for history"
+
 
 class OrganisationNewForm(forms.Form):
+    id = forms.SlugField()
     title = forms.CharField()
+    comment = forms.CharField(widget=forms.Textarea, label=COMMENT_LABEL)
 
 
-class OrganisationImportForm(forms.Form):
+class ModelImportForm(forms.Form):
     file = forms.FileField()
-
-
-class OrganisationMakeDisputedForm(forms.Form):
-    pass
-
-
-class OrganisationMakePrivateForm(forms.Form):
-    pass
+    comment = forms.CharField(widget=forms.Textarea, label=COMMENT_LABEL)
 
 
 class ProjectNewForm(forms.Form):
     id = forms.SlugField()
     title = forms.CharField()
-
-
-class ProjectImportForm(forms.Form):
-    file = forms.FileField()
-
-
-class ProjectMakeDisputedForm(forms.Form):
-    pass
-
-
-class ProjectMakePrivateForm(forms.Form):
-    pass
+    comment = forms.CharField(widget=forms.Textarea, label=COMMENT_LABEL)

@@ -1,6 +1,11 @@
 import jsonpointer
 from django.db import models
 
+from jsondataferretexampleapp import (  # noqa
+    TYPE_ORGANISATION_PUBLIC_ID,
+    TYPE_PROJECT_PUBLIC_ID,
+)
+
 
 class BaseModel(models.Model):
     public_id = models.CharField(max_length=200, unique=True)
@@ -54,8 +59,8 @@ class BaseModel(models.Model):
 
 
 class Organisation(BaseModel):
-    pass
+    type_id = TYPE_ORGANISATION_PUBLIC_ID
 
 
 class Project(BaseModel):
-    pass
+    type_id = TYPE_PROJECT_PUBLIC_ID
