@@ -6,6 +6,15 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Fixed
+
+- Field type changed to Django JSONField, to be compatible with Django 3.2 and 4
+- Lock default_auto_field to AutoField
+
+### Changed
+
+- Set Django minimum version to 3.2 (this is minimum still supported)
+- Set Python minimum version to 3.8 (this is minimum Django 4 supports, comes with Ubuntu 20.04 LTS and is what our current production uses)
 
 ## [0.3.0] - 2021-01-06
 

@@ -26,7 +26,10 @@ class NewEditCase(TestCase):
     def test_does_this_create_or_change_record_replace_no_change(self):
         # Apply inital data - No record, so should be true
         data_initial = NewEventData(
-            "animal", "lion", {"title": "Lion", "sound": "Roar!"}, approved=True,
+            "animal",
+            "lion",
+            {"title": "Lion", "sound": "Roar!"},
+            approved=True,
         )
         assert data_initial.does_this_create_or_change_record()
         # Save it so we have record to compare more edits to
@@ -43,7 +46,10 @@ class NewEditCase(TestCase):
     def test_does_this_create_or_change_record_merge_no_change(self):
         # Apply inital data - No record, so should be true
         data_initial = NewEventData(
-            "animal", "lion", {"title": "Lion", "sound": "Roar!"}, approved=True,
+            "animal",
+            "lion",
+            {"title": "Lion", "sound": "Roar!"},
+            approved=True,
         )
         assert data_initial.does_this_create_or_change_record()
         # Save it so we have record to compare more edits to
@@ -57,7 +63,10 @@ class NewEditCase(TestCase):
     def test_does_this_create_or_change_record_replace_change(self):
         # Apply inital data - No record, so should be true
         data_initial = NewEventData(
-            "animal", "lion", {"title": "Lion", "sound": "Roar!"}, approved=True,
+            "animal",
+            "lion",
+            {"title": "Lion", "sound": "Roar!"},
+            approved=True,
         )
         assert data_initial.does_this_create_or_change_record()
         # Save it so we have record to compare more edits to
@@ -74,7 +83,10 @@ class NewEditCase(TestCase):
     def test_does_this_create_or_change_record_merge_change(self):
         # Apply inital data - No record, so should be true
         data_initial = NewEventData(
-            "animal", "lion", {"title": "Lion", "sound": "Roar!"}, approved=True,
+            "animal",
+            "lion",
+            {"title": "Lion", "sound": "Roar!"},
+            approved=True,
         )
         assert data_initial.does_this_create_or_change_record()
         # Save it so we have record to compare more edits to

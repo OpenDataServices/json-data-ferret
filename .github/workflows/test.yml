@@ -1,0 +1,40 @@
+name: Test
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [3.8, 3.9, "3.10"]
+        django-version: [">=3.2,<4", ">=4,<5"]
+    services:
+      postgres:
+        image: postgres:11
+        env:
+          POSTGRES_PASSWORD: postgres
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-python@v1
+      with:
+        python-version: ${{ matrix.python-version }}
+    - uses: actions/cache@v1
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements_dev.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+    - run: pip install -e .[dev]
+    - run: pip install "django${{  matrix.django-version }}"
+    - env:
+        JSONDATAFERRET_DATABASE_NAME: postgres
+        JSONDATAFERRET_DATABASE_USER: postgres
+        JSONDATAFERRET_DATABASE_PASSWORD: postgres
+      run: python manage.py test

@@ -4,14 +4,14 @@
 
 {% block content %}
 
-    {% if projects %}
+    {% if datas %}
         <table class="table">
             <tr>
                 <th>ID</th>
                 <th>Project Name</th>
                 <th>&nbsp;</th>
             </tr>
-            {% for project in projects %}
+            {% for project in datas %}
                 <tr>
                     <td><a href="{% url 'jsondataferretexampleapp_admin_project_index' public_id=project.public_id %}">{{ project.public_id }}</a></td>
                     <td>{{ project.cached_data.project_name.value }}</td>
@@ -24,7 +24,6 @@
         <p>No projects are available.</p>
     {% endif %}
 
-    <p><a href="{% url 'jsondataferretexampleapp_admin_project_download_blank_form' %}" class="btn btn-primary">Download Blank Form</a></p>
     <p><a href="{% url 'jsondataferretexampleapp_admin_project_new' %}" class="btn btn-primary">New Project</a></p>
 
 {% endblock %}

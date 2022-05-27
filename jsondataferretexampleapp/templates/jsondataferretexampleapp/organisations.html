@@ -4,13 +4,13 @@
 
 {% block content %}
 
-    {% if organisations %}
+    {% if datas %}
         <table class="table">
             <tr>
                 <th>Title</th>
                 <th>&nbsp;</th>
             </tr>
-            {% for organisation in organisations %}
+            {% for organisation in datas %}
                 <tr>
                     <td>{{ organisation.data_public.title }}</td>
                     <td><a href="{% url 'jsondataferretexampleapp_organisation_index' public_id=organisation.public_id %}" class="btn btn-primary">View</a></td>

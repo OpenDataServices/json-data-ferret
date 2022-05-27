@@ -21,7 +21,9 @@ Set up app for the first time
 
 Run normal Django database migrations.
 
-Create a superuser via the normal django command line tool.
+Create a superuser via the normal django command line tool:
+
+    python manage.py createsuperuser
 
 Run the webserver.
 
@@ -59,4 +61,14 @@ Clean up code before commit:
     isort --recursive djangoproject/ jsondataferret jsondataferretexampleapp/ setup.py docs/
     black djangoproject/ jsondataferret jsondataferretexampleapp/ setup.py docs/
     flake8 djangoproject/ jsondataferret jsondataferretexampleapp/ setup.py docs/
+
+
+Reset Database
+---------------
+
+    sudo su postgres
+    psql -c "DROP DATABASE app"
+    psql -c "CREATE DATABASE app WITH OWNER app ENCODING 'UTF8'  LC_COLLATE='en_GB.UTF-8' LC_CTYPE='en_GB.UTF-8'  TEMPLATE=template0 "
+    exit
+    python manage.py migrate
 

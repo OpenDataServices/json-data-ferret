@@ -26,7 +26,12 @@ def get_field_list_from_json_and_field_config_type_value(data, field_config):
     try:
         value = jsonpointer.resolve_pointer(data, field_config["key"])
         if value:
-            return [{"title": field_config["title"], "value": value,}]
+            return [
+                {
+                    "title": field_config["title"],
+                    "value": value,
+                }
+            ]
     except jsonpointer.JsonPointerException:
         pass
 

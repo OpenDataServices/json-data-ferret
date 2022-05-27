@@ -9,7 +9,7 @@ locale-gen
 
 apt-get update
 
-DEBIAN_FRONTEND=noninteractive apt-get install -y python3 python3-pip postgresql-10 libpq-dev  python-virtualenv
+DEBIAN_FRONTEND=noninteractive apt-get install -y python3 python3-pip postgresql-12 libpq-dev python3-virtualenv
 
 pip3 install sphinx virtualenv
 
