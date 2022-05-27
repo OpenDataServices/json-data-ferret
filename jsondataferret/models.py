@@ -175,6 +175,7 @@ class Edit(models.Model):
             return False
 
     def get_data_fields(self):
+        # TODO work with data_key field.
         return get_field_list_from_json(
             self.record.type.public_id,
             self.data,
