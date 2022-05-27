@@ -241,7 +241,9 @@ class AdminModelDownloadForm(LoginRequiredMixin, View, ABC):
 
         with open(out_file, "rb") as fh:
             response = HttpResponse(fh.read(), content_type="application/vnd.ms-excel")
-            response["Content-Disposition"] = "inline; filename=organisation.xlsx"
+            response["Content-Disposition"] = (
+                "inline; filename=" + self.__class__._model.__name__.lower() + ".xlsx"
+            )
 
         return response
 
