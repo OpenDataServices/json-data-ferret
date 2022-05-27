@@ -169,12 +169,12 @@ def record_moderate(request, type_id, record_id):
                 actions, user=request.user, comment=request.POST.get("comment")
             )
 
-        return HttpResponseRedirect(
-            reverse(
-                "jsondataferret_record_index",
-                kwargs={"type_id": type_id, "record_id": record_id},
+            return HttpResponseRedirect(
+                reverse(
+                    "jsondataferret_record_index",
+                    kwargs={"type_id": type_id, "record_id": record_id},
+                )
             )
-        )
 
     return render(
         request,
