@@ -28,6 +28,7 @@ def get_field_list_from_json_and_field_config_type_value(data, field_config):
         if value:
             return [
                 {
+                    "key": field_config["key"],
                     "title": field_config["title"],
                     "value": value,
                 }
@@ -59,6 +60,11 @@ def get_field_list_from_json_and_field_config_type_list(data, field_config):
                 if value:
                     out.append(
                         {
+                            "key": field_config["key"]
+                            + "["
+                            + str(idx - 1)
+                            + "]"
+                            + item_field_config["key"],
                             "title": field_config["title"]
                             + " "
                             + str(idx)

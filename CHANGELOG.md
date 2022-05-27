@@ -18,6 +18,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - In web UI, Only leave moderate page if an action is actually carried out. 
   If user presses submit but has not selected any actions, stay on same page.
 
+### Added
+
+- Record.get_cached_data_fields and Edit.get_data_fields return an new key in each item "key". This should be unique, unlike "title", which may not be.
+
 ## [0.3.0] - 2021-01-06
 
 ### Fixed
