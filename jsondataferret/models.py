@@ -180,3 +180,47 @@ class Edit(models.Model):
             self.record.type.public_id,
             self.data,
         )
+
+    def get_data_fields_include_differences_from_latest_data(self):
+        if self.approval_event or self.refusal_event:
+            raise Exception(
+                "get_data_fields_include_differences_from_latest_data should only be used on edits not moderated yet"
+            )
+        # TODO work with data_key field.
+        if not self.record.cached_exists:
+            # No existing data, so nothing special we can do here
+            edit_fields = get_field_list_from_json(
+                self.record.type.public_id,
+                self.data,
+            )
+            for e in edit_fields:
+                e["different_from_latest_value"] = True
+            return edit_fields
+        else:
+
+            latest_fields = get_field_list_from_json(
+                self.record.type.public_id, self.record.cached_data
+            )
+            latest_fields_by_key = {f["key"]: f for f in latest_fields}
+
+            edit_fields = get_field_list_from_json(
+                self.record.type.public_id,
+                self.data,
+            )
+            edit_fields_by_key = {f["key"]: f for f in edit_fields}
+
+            # This will collect changes where the field is in both old and new, and changes where a field exists in new only
+            for field in edit_fields:
+                latest_value = None
+                if field["key"] in latest_fields_by_key:
+                    latest_value = latest_fields_by_key[field["key"]]["value"]
+                field["different_from_latest_value"] = latest_value != field["value"]
+
+            # So new we have to add any changes where the field exists in old only
+            for key, field_data in latest_fields_by_key.items():
+                if key not in edit_fields_by_key:
+                    field_data["different_from_latest_value"] = True
+                    field_data["value"] = None
+                    edit_fields.append(field_data)
+
+            return edit_fields
