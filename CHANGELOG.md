@@ -18,12 +18,15 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - In web UI, Only leave moderate page if an action is actually carried out. 
   If user presses submit but has not selected any actions, stay on same page.
 - Web UI shows fields that are removed by an edit on the moderation screen
+- Web UI on the list events screen: shows some records the event is about
 
 ### Added
 
 - Record.get_cached_data_fields and Edit.get_data_fields return an new key in each item "key". This should be unique, unlike "title", which may not be.
 - Edit has a new method get_data_fields_include_differences_from_latest_data() which returns a list of fields with the new boolean key different_from_latest_value
 - Web UI shows changed fields in bold on moderation screen
+- Event has new method get_records to return records linked in the event
+- Event has new method get_records_summary to return first 4 records and a boolean flag if there are more
 
 ## [0.3.0] - 2021-01-06
 

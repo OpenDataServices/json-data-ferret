@@ -117,6 +117,27 @@ class Event(models.Model):
     comment = models.TextField(default="")
     objects = EventManager()
 
+    def get_records(self, limit=-1):
+        sql = (
+            "SELECT jsondataferret_record.id, jsondataferret_record.public_id, "
+            + "max(jsondataferret_type.public_id) AS type_public_id, max(jsondataferret_type.title) AS type_title  FROM jsondataferret_record "
+            + "JOIN jsondataferret_edit ON jsondataferret_edit.record_id = jsondataferret_record.id "
+            + "JOIN jsondataferret_type ON jsondataferret_record.type_id = jsondataferret_type.id "
+            + "WHERE jsondataferret_edit.creation_event_id = %s OR jsondataferret_edit.refusal_event_id = %s OR jsondataferret_edit.approval_event_id = %s "
+            + "GROUP BY jsondataferret_record.id "
+            + "ORDER BY max(jsondataferret_type.title) ASC,  jsondataferret_record.public_id ASC"
+        )
+        params = [self.id, self.id, self.id]
+        if int(limit) > 0:
+            sql += " LIMIT %s"
+            params.append(int(limit))
+        records = Record.objects.raw(sql, params)
+        return records
+
+    def get_records_summary(self):
+        records = self.get_records(limit=5)
+        return {"records": records[:4], "more": len(records) == 5}
+
 
 class Edit(models.Model):
     public_id = models.CharField(max_length=200, unique=True)
