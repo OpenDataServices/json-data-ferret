@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   If user presses submit but has not selected any actions, stay on same page.
 - Web UI shows fields that are removed by an edit on the moderation screen
 - Web UI on the list events screen: shows some records the event is about
+- Web UI List events page can be filtered by created date
 
 ### Added
 

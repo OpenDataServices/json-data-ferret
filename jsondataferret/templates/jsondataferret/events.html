@@ -12,6 +12,12 @@
 
 {% block content %}
 
+    <form method="get">
+        {{ filter.form.as_p }}
+        <input type="submit" value="Filter"  class="btn btn-primary" />
+        <a href="{% url 'jsondataferret_event_list' %}" class="btn btn-secondary">(reset filters)</a>
+    </form>
+
     {% if page_obj.paginator.count > 0 %}
         <table class="table">
             <tr>
