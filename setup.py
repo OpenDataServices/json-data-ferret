@@ -6,7 +6,15 @@ setup(
     author="Open Data Services",
     author_email="code@opendataservices.coop",
     packages=[p for p in find_packages() if p.startswith("jsondataferret")],
-    package_data={"jsondataferret": ["templates/*"]},
+    package_data={
+        "jsondataferret": [
+            "templates/*",
+            "templates/*/*",
+            "templates/*/*/*",
+            "templates/*/*/*/*",
+            "templates/*/*/*/*/*",
+        ]
+    },
     url="https://github.com/OpenDataServices/json-data-ferret",
     license="MIT",
     description="Django App for managing JSON Data",
