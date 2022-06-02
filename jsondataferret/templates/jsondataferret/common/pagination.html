@@ -1,8 +1,8 @@
 <div class="pagination">
     <span class="step-links">
         {% if page_obj.has_previous %}
-            <a href="?{{ pagination_get_params }}&page=1">&laquo; first</a>
-            <a href="?{{ pagination_get_params }}&page={{ page_obj.previous_page_number }}">&lt; previous</a>
+            <a href="?{{ pagination_get_params }}&page=1" class="btn btn-light">&laquo; first</a>
+            <a href="?{{ pagination_get_params }}&page={{ page_obj.previous_page_number }}" class="btn btn-light">&lt; previous</a>
         {% endif %}
 
         <span class="current">
@@ -10,8 +10,8 @@
         </span>
 
         {% if page_obj.has_next %}
-            <a href="?{{ pagination_get_params }}&page={{ page_obj.next_page_number }}">next &gt;</a>
-            <a href="?{{ pagination_get_params }}&page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+            <a href="?{{ pagination_get_params }}&page={{ page_obj.next_page_number }}" class="btn btn-light">next &gt;</a>
+            <a href="?{{ pagination_get_params }}&page={{ page_obj.paginator.num_pages }}" class="btn btn-light">last &raquo;</a>
         {% endif %}
     </span>
 </div>
