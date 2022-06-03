@@ -63,16 +63,15 @@ class ModelIndex(View, ABC):
             data = self.__class__._model.objects.get(public_id=public_id)
         except self._model.DoesNotExist:
             raise Http404("Data does not exist")
-        field_data = {}
-        for field in self.__class__._field_list:
-            if data.has_data_public_field(field["key"]):
-                field_data[field["title"]] = data.get_data_public_field(field["key"])
+        field_datas = jsondataferret.utils.get_field_list_from_json(
+            self.__class__._model.type_id, data.data_public
+        )
         return render(
             request,
             "jsondataferretexampleapp/"
             + self.__class__._model.__name__.lower()
             + "/index.html",
-            {"data": data, "field_data": field_data},
+            {"data": data, "field_datas": field_datas},
         )
 
 
@@ -198,7 +197,7 @@ class AdminModelIndex(LoginRequiredMixin, View, ABC):
             data = self.__class__._model.objects.get(public_id=public_id)
         except self._model.DoesNotExist:
             raise Http404("Data does not exist")
-        field_data = jsondataferret.utils.get_field_list_from_json(
+        field_datas = jsondataferret.utils.get_field_list_from_json(
             self.__class__._model.type_id, data.data_private
         )
         return render(
@@ -206,7 +205,7 @@ class AdminModelIndex(LoginRequiredMixin, View, ABC):
             "jsondataferretexampleapp/admin/"
             + self.__class__._model.__name__.lower()
             + "/index.html",
-            {"data": data, "field_data": field_data},
+            {"data": data, "field_datas": field_datas},
         )
 
 
