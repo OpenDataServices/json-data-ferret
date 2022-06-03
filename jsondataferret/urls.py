@@ -54,4 +54,5 @@ urlpatterns = [
     ),
     path("event", views.event_list, name="jsondataferret_event_list"),
     path("event/<event_id>/", views.event_index, name="jsondataferret_event_index"),
+    path("edit/<edit_id>/", views.edit_index, name="jsondataferret_edit_index"),
 ]

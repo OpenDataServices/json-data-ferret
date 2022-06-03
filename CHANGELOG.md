@@ -6,6 +6,23 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Added
+
+- Added CachedRecordHistory model
+- Added new code for working with this:
+-- Edit has a new method get_data_fields_include_differences_from_previous_data()
+-- Edit has a new method get_previous_cached_record_history
+-- Edit has a new method get_data_diff_previous_cached_record_history
+-- Edit has a new method get_data_diff_previous_cached_record_history_html
+- Event.get_records has new optional parameter approved_edits_only
+- get_field_list_from_json_with_differences method added to utils
+- Added new things to Web UI made possible by new data:
+-- Web UI for an event: shows you previous JSON, diff, fields. Shows you approved changes per record. Has separate screen for each edit. 
+- Added new requirement, jsondiff
+
+
+Note: After this version is installed, the runeventstreamtodatabase cli command must be run to populate the new CachedRecordHistory cache.
+
 ## [0.4.0] - 2021-06-09
 
 ### Fixed

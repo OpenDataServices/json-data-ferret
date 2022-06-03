@@ -5,6 +5,35 @@ from django.conf import settings
 from jsondataferret import EVENT_MODE_MERGE, EVENT_MODE_REPLACE
 
 
+def get_field_list_from_json_with_differences(
+    type_public_id, old_data, current_data, diff_key
+):
+    old_fields = get_field_list_from_json(type_public_id, old_data)
+    old_fields_by_key = {f["key"]: f for f in old_fields}
+
+    current_fields = get_field_list_from_json(
+        type_public_id,
+        current_data,
+    )
+    current_fields_by_key = {f["key"]: f for f in current_fields}
+
+    # This will collect changes where the field is in both old and new, and changes where a field exists in new only
+    for field in current_fields:
+        old_value = None
+        if field["key"] in old_fields_by_key:
+            old_value = old_fields_by_key[field["key"]]["value"]
+        field[diff_key] = old_value != field["value"]
+
+    # So now we have to add any changes where the field exists in old only
+    for key, field_data in old_fields_by_key.items():
+        if key not in current_fields_by_key:
+            field_data[diff_key] = True
+            field_data["value"] = None
+            current_fields.append(field_data)
+
+    return current_fields
+
+
 def get_field_list_from_json(type_public_id, data):
     fields = settings.JSONDATAFERRET_TYPE_INFORMATION.get(type_public_id, {}).get(
         "fields", []
