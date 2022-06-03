@@ -37,20 +37,20 @@
                         {% with fields_to_list=edit.get_data_fields_include_differences_from_latest_data %}
                             <ul class="nav nav-tabs" role="tablist">
                                 <li class="nav-item active">
-                                    <a class="nav-link active" href="#data-json" data-toggle="tab">JSON</a>
+                                    <a class="nav-link active" href="#edit-{{ edit.public_id }}-data-json" data-toggle="tab">JSON</a>
                                 </li>
                                 {% if fields_to_list %}
                                 <li class="nav-item">
-                                    <a class="nav-link" href="#data-fields" data-toggle="tab">Fields</a>
+                                    <a class="nav-link" href="#edit-{{ edit.public_id }}-data-fields" data-toggle="tab">Fields</a>
                                 </li>
                                 {% endif %}
                             </ul>
                             <div class="tab-content ">
-                                <div class="tab-pane fade show active" id="data-json">
+                                <div class="tab-pane fade show active" id="edit-{{ edit.public_id }}-data-json">
                                     <p>{{ edit.get_data_html|safe }}</p>
                                 </div>
                                 {% if fields_to_list %}
-                                    <div class="tab-pane fade" id="data-fields">
+                                    <div class="tab-pane fade" id="edit-{{ edit.public_id }}-data-fields">
                                         <table class="table">
                                             {% for field_data in fields_to_list %}
                                                 <tr>
