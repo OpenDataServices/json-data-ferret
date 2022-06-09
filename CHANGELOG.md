@@ -6,11 +6,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [0.4.0] - 2021-06-09
+
 ### Fixed
 
 - Field type changed to Django JSONField, to be compatible with Django 3.2 and 4
 - Lock default_auto_field to AutoField
 - Web UI moderate screen; if 2 edits waiting to be moderated at once, the JSON/Fields tabs were broken
+- Python packaging fixed so it can be used via PyPi
 
 ### Changed
 
