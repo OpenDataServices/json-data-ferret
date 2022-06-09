@@ -2,6 +2,7 @@ import json
 import os
 import random
 import tempfile
+import urllib.parse
 
 import pygments
 import pygments.formatters
@@ -9,13 +10,14 @@ import pygments.lexers.data
 import spreadsheetforms
 from django.conf import settings
 from django.contrib.auth.decorators import permission_required
-from django.core.paginator import Paginator
+from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.http import Http404, HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 
 import jsondataferret.pythonapi.newevent
 
+from .filters import EventFilter
 from .forms import RecordImportForm
 from .models import Edit, Event, Record, Type
 
@@ -169,12 +171,12 @@ def record_moderate(request, type_id, record_id):
                 actions, user=request.user, comment=request.POST.get("comment")
             )
 
-        return HttpResponseRedirect(
-            reverse(
-                "jsondataferret_record_index",
-                kwargs={"type_id": type_id, "record_id": record_id},
+            return HttpResponseRedirect(
+                reverse(
+                    "jsondataferret_record_index",
+                    kwargs={"type_id": type_id, "record_id": record_id},
+                )
             )
-        )
 
     return render(
         request,
@@ -354,11 +356,25 @@ def record_event_list(request, type_id, record_id):
 
 @permission_required("jsondataferret.admin")
 def event_list(request):
-    events = Event.objects.all().order_by("created")
-    paginator = Paginator(events, 100)
+    filter = EventFilter(request.GET, queryset=Event.objects.all().order_by("created"))
+    paginator = Paginator(filter.qs, 100)
     page_number = request.GET.get("page")
-    page_obj = paginator.get_page(page_number)
-    return render(request, "jsondataferret/events.html", {"page_obj": page_obj})
+    try:
+        page_obj = paginator.page(page_number)
+    except PageNotAnInteger:
+        page_obj = paginator.page(1)
+    except EmptyPage:
+        page_obj = paginator.page(paginator.num_pages)
+    pagination_get_params = urllib.parse.urlencode(filter.get_get_params_for_paging())
+    return render(
+        request,
+        "jsondataferret/events.html",
+        {
+            "page_obj": page_obj,
+            "filter": filter,
+            "pagination_get_params": pagination_get_params,
+        },
+    )
 
 
 @permission_required("jsondataferret.admin")

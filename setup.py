@@ -12,6 +12,7 @@ setup(
     description="Django App for managing JSON Data",
     install_requires=[
         "Django>=3.2",
+        "django-filter",
         "jsonmerge",
         "spreadsheetforms",
         "Pygments",

@@ -10,11 +10,25 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Field type changed to Django JSONField, to be compatible with Django 3.2 and 4
 - Lock default_auto_field to AutoField
+- Web UI moderate screen; if 2 edits waiting to be moderated at once, the JSON/Fields tabs were broken
 
 ### Changed
 
 - Set Django minimum version to 3.2 (this is minimum still supported)
 - Set Python minimum version to 3.8 (this is minimum Django 4 supports, comes with Ubuntu 20.04 LTS and is what our current production uses)
+- In web UI, Only leave moderate page if an action is actually carried out. 
+  If user presses submit but has not selected any actions, stay on same page.
+- Web UI shows fields that are removed by an edit on the moderation screen
+- Web UI on the list events screen: shows some records the event is about
+- Web UI List events page can be filtered by created date
+
+### Added
+
+- Record.get_cached_data_fields and Edit.get_data_fields return an new key in each item "key". This should be unique, unlike "title", which may not be.
+- Edit has a new method get_data_fields_include_differences_from_latest_data() which returns a list of fields with the new boolean key different_from_latest_value
+- Web UI shows changed fields in bold on moderation screen
+- Event has new method get_records to return records linked in the event
+- Event has new method get_records_summary to return first 4 records and a boolean flag if there are more
 
 ## [0.3.0] - 2021-01-06
 
