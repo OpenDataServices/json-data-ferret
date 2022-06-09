@@ -2,7 +2,7 @@ from setuptools import find_packages, setup
 
 setup(
     name="jsondataferret",
-    version="0.3.0",
+    version="0.4.0",
     author="Open Data Services",
     author_email="code@opendataservices.coop",
     packages=[p for p in find_packages() if p.startswith("jsondataferret")],
