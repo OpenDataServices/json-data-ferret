@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+- Edit & CachedRecordHistory - fix crash in get_data_diff_previous_cached_record_history_html
+
 ## [0.5.0] - 2021-06-10 - The improved history release
 
 ### Added
