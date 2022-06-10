@@ -1,5 +1,6 @@
 from django.test import TestCase, override_settings  # noqa
 
+from jsondataferret import EVENT_MODE_MERGE, EVENT_MODE_REPLACE
 from jsondataferret.models import Edit, Type
 from jsondataferret.pythonapi.newevent import NewEventData, newEvent
 
@@ -25,7 +26,7 @@ NEW_JSONDATAFERRET_TYPE_INFORMATION_SETTINGS = {
     JSONDATAFERRET_TYPE_INFORMATION=NEW_JSONDATAFERRET_TYPE_INFORMATION_SETTINGS
 )
 class TestGetDataFieldsIncludeDifferencesFromLatestData(TestCase):
-    def _test_current_data_to_new_data(self, current_data, new_data):
+    def _test_current_data_to_new_data(self, current_data, new_data, new_mode):
         # Create type
         type_model = Type()
         type_model.public_id = "animal"
@@ -47,14 +48,7 @@ class TestGetDataFieldsIncludeDifferencesFromLatestData(TestCase):
 
         # Create an edit that needs approval
         newEvent(
-            [
-                NewEventData(
-                    "animal",
-                    "lion",
-                    new_data,
-                    approved=False,
-                )
-            ],
+            [NewEventData("animal", "lion", new_data, approved=False, mode=new_mode)],
             None,
         )
 
@@ -64,7 +58,9 @@ class TestGetDataFieldsIncludeDifferencesFromLatestData(TestCase):
 
     def test_no_change(self):
         fields = self._test_current_data_to_new_data(
-            {"title": "Lion", "sound": "Roar!"}, {"title": "Lion", "sound": "Roar!"}
+            {"title": "Lion", "sound": "Roar!"},
+            {"title": "Lion", "sound": "Roar!"},
+            EVENT_MODE_REPLACE,
         )
         assert 2 == len(fields)
         assert fields[0]["key"] == "/title"
@@ -76,6 +72,7 @@ class TestGetDataFieldsIncludeDifferencesFromLatestData(TestCase):
         fields = self._test_current_data_to_new_data(
             {"title": "Lion", "sound": "Roar!"},
             {"title": "Lion", "sound": "Roar! Rrrrrrrrrr!"},
+            EVENT_MODE_REPLACE,
         )
         assert 2 == len(fields)
         assert fields[0]["key"] == "/title"
@@ -85,7 +82,7 @@ class TestGetDataFieldsIncludeDifferencesFromLatestData(TestCase):
 
     def test_field_removed(self):
         fields = self._test_current_data_to_new_data(
-            {"title": "Lion", "sound": "Roar!"}, {"title": "Lion"}
+            {"title": "Lion", "sound": "Roar!"}, {"title": "Lion"}, EVENT_MODE_REPLACE
         )
         assert 2 == len(fields)
         assert fields[0]["key"] == "/title"
@@ -95,7 +92,7 @@ class TestGetDataFieldsIncludeDifferencesFromLatestData(TestCase):
 
     def test_field_added(self):
         fields = self._test_current_data_to_new_data(
-            {"title": "Lion"}, {"title": "Lion", "sound": "Roar!"}
+            {"title": "Lion"}, {"title": "Lion", "sound": "Roar!"}, EVENT_MODE_REPLACE
         )
         assert 2 == len(fields)
         assert fields[0]["key"] == "/title"
@@ -107,6 +104,7 @@ class TestGetDataFieldsIncludeDifferencesFromLatestData(TestCase):
         fields = self._test_current_data_to_new_data(
             {"title": "Lion", "alternative_names": [{"name": "Big kitty"}]},
             {"title": "Lion", "alternative_names": [{"name": "Big kitty"}]},
+            EVENT_MODE_REPLACE,
         )
         assert 2 == len(fields)
         assert fields[0]["key"] == "/title"
@@ -118,6 +116,7 @@ class TestGetDataFieldsIncludeDifferencesFromLatestData(TestCase):
         fields = self._test_current_data_to_new_data(
             {"title": "Lion", "alternative_names": [{"name": "Big kitty"}]},
             {"title": "Lion", "alternative_names": [{"name": "Massive cutie pie"}]},
+            EVENT_MODE_REPLACE,
         )
         assert 2 == len(fields)
         assert fields[0]["key"] == "/title"
@@ -129,6 +128,7 @@ class TestGetDataFieldsIncludeDifferencesFromLatestData(TestCase):
         fields = self._test_current_data_to_new_data(
             {"title": "Lion", "alternative_names": [{"name": "Big kitty"}]},
             {"title": "Lion", "alternative_names": []},
+            EVENT_MODE_REPLACE,
         )
         assert 2 == len(fields)
         assert fields[0]["key"] == "/title"
@@ -140,9 +140,22 @@ class TestGetDataFieldsIncludeDifferencesFromLatestData(TestCase):
         fields = self._test_current_data_to_new_data(
             {"title": "Lion", "alternative_names": []},
             {"title": "Lion", "alternative_names": [{"name": "Big kitty"}]},
+            EVENT_MODE_REPLACE,
         )
         assert 2 == len(fields)
         assert fields[0]["key"] == "/title"
         assert not fields[0]["different_from_latest_value"]
         assert fields[1]["key"] == "/alternative_names[0]/name"
+        assert fields[1]["different_from_latest_value"]
+
+    def test_simple_change_merge(self):
+        fields = self._test_current_data_to_new_data(
+            {"title": "Lion", "sound": "Roar!"},
+            {"sound": "Roar! Rrrrrrrrrr!"},
+            EVENT_MODE_MERGE,
+        )
+        assert 2 == len(fields)
+        assert fields[0]["key"] == "/title"
+        assert not fields[0]["different_from_latest_value"]
+        assert fields[1]["key"] == "/sound"
         assert fields[1]["different_from_latest_value"]
