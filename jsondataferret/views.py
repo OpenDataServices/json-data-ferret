@@ -19,7 +19,7 @@ import jsondataferret.pythonapi.newevent
 
 from .filters import EventFilter
 from .forms import RecordImportForm
-from .models import Edit, Event, Record, Type
+from .models import CachedRecordHistory, Edit, Event, Record, Type
 
 
 ############################ Index
@@ -386,13 +386,26 @@ def event_index(request, event_id):
     edits_created = event.edits_created.all()
     edits_approved = event.edits_approved.all()
     edits_refused = event.edits_refused.all()
-    edits_created_and_approved = list(set(edits_created).intersection(edits_approved))
-    edits_only_created = [
-        edit for edit in edits_created if edit not in edits_created_and_approved
-    ]
-    edits_only_approved = [
-        edit for edit in edits_approved if edit not in edits_created_and_approved
-    ]
+    edits_only_created = [edit for edit in edits_created if edit not in edits_approved]
+    if edits_approved:
+        records_with_changes = [
+            {"record": r} for r in event.get_records(approved_edits_only=True)
+        ]
+        for record_with_changes in records_with_changes:
+            try:
+                record_with_changes[
+                    "cached_record_history"
+                ] = CachedRecordHistory.objects.get(
+                    record=record_with_changes["record"], event=event
+                )
+                record_with_changes["last_cached_record_history"] = record_with_changes[
+                    "cached_record_history"
+                ].get_previous_cached_record_history()
+            except CachedRecordHistory.DoesNotExist:
+                pass
+
+    else:
+        records_with_changes = []
     return render(
         request,
         "jsondataferret/event/index.html",
@@ -402,8 +415,22 @@ def event_index(request, event_id):
             "edits_approved": edits_approved,
             "edits_refused": edits_refused,
             "edits_only_created": edits_only_created,
-            "edits_only_approved": edits_only_approved,
-            "edits_created_and_approved": edits_created_and_approved,
+            "records_with_changes": records_with_changes,
+        },
+    )
+
+
+@permission_required("jsondataferret.admin")
+def edit_index(request, edit_id):
+    try:
+        edit = Edit.objects.get(public_id=edit_id)
+    except Edit.DoesNotExist:
+        raise Http404("Edit does not exist")
+    return render(
+        request,
+        "jsondataferret/edit/index.html",
+        {
+            "edit": edit,
         },
     )
 

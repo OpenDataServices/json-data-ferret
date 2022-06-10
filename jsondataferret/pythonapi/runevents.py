@@ -2,7 +2,7 @@ from django.apps import apps
 from django.conf import settings
 from django.db import connection
 
-from jsondataferret.models import Edit, Event, Record, Type
+from jsondataferret.models import CachedRecordHistory, Edit, Event, Record, Type
 from jsondataferret.utils import apply_edit_get_new_cached_data
 
 
@@ -51,3 +51,13 @@ def apply_event(event):
         # --------------------------------- Mark record existing (any data does that) and save!
         edit.record.cached_exists = True
         edit.record.save()
+
+        # --------------------------------- Create/Update CachedRecordHistory
+        try:
+            crh = CachedRecordHistory.objects.get(record=edit.record, event=event)
+        except CachedRecordHistory.DoesNotExist:
+            crh = CachedRecordHistory()
+            crh.record = edit.record
+            crh.event = event
+        crh.data = edit.record.cached_data
+        crh.save()

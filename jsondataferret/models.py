@@ -1,5 +1,6 @@
 import json
 
+import jsondiff
 import jsonpointer
 import jsonschema
 import pygments
@@ -10,7 +11,7 @@ from django.db import models
 
 from jsondataferret import EVENT_MODE_REPLACE
 
-from .utils import get_field_list_from_json
+from .utils import get_field_list_from_json, get_field_list_from_json_with_differences
 
 
 class JSONDataFerret(models.Model):
@@ -117,25 +118,29 @@ class Event(models.Model):
     comment = models.TextField(default="")
     objects = EventManager()
 
-    def get_records(self, limit=-1):
+    def get_records(self, limit=-1, approved_edits_only=False):
         sql = (
             "SELECT jsondataferret_record.id, jsondataferret_record.public_id, "
             + "max(jsondataferret_type.public_id) AS type_public_id, max(jsondataferret_type.title) AS type_title  FROM jsondataferret_record "
             + "JOIN jsondataferret_edit ON jsondataferret_edit.record_id = jsondataferret_record.id "
             + "JOIN jsondataferret_type ON jsondataferret_record.type_id = jsondataferret_type.id "
-            + "WHERE jsondataferret_edit.creation_event_id = %s OR jsondataferret_edit.refusal_event_id = %s OR jsondataferret_edit.approval_event_id = %s "
+            + (
+                "WHERE jsondataferret_edit.approval_event_id = %(event_id)s "
+                if approved_edits_only
+                else "WHERE jsondataferret_edit.creation_event_id = %(event_id)s OR jsondataferret_edit.refusal_event_id = %(event_id)s OR jsondataferret_edit.approval_event_id = %(event_id)s"
+            )
             + "GROUP BY jsondataferret_record.id "
             + "ORDER BY max(jsondataferret_type.title) ASC,  jsondataferret_record.public_id ASC"
         )
-        params = [self.id, self.id, self.id]
+        params = {"event_id": self.id}
         if int(limit) > 0:
-            sql += " LIMIT %s"
-            params.append(int(limit))
+            sql += " LIMIT %(limit)s"
+            params["limit"] = int(limit)
         records = Record.objects.raw(sql, params)
         return records
 
     def get_records_summary(self):
-        records = self.get_records(limit=5)
+        records = self.get_records(limit=5, approved_edits_only=False)
         return {"records": records[:4], "more": len(records) == 5}
 
 
@@ -165,6 +170,11 @@ class Edit(models.Model):
     mode = models.CharField(max_length=200, default=EVENT_MODE_REPLACE)
     data_key = models.TextField(default="/")
     data = models.JSONField(default=dict)
+
+    # Use get_previous_cached_record_history() to access information.
+    # _previous_cached_record_history variable caches result to avoid repeated DB lookups.
+    # -1 means it hasn't been looked for yet, None means nothing exists or it could be a CachedRecordHistory instance.
+    _previous_cached_record_history = -1
 
     def get_data_html(self):
         return pygments.highlight(
@@ -202,46 +212,129 @@ class Edit(models.Model):
             self.data,
         )
 
+    def get_previous_cached_record_history(self):
+        """For the record of this edit, returns the previous CachedRecordHistory before this event was applied.
+        If this is the first event to change a record, this method could return None."""
+        if self._previous_cached_record_history == -1:
+            self._previous_cached_record_history = (
+                CachedRecordHistory.objects.filter(
+                    record=self.record, event__created__lt=self.creation_event.created
+                )
+                .order_by("-event__created")
+                .first()
+            )
+        return self._previous_cached_record_history
+
+    def get_data_diff_previous_cached_record_history(self):
+        """Returns dict of differences between this version of the record and the previous one"""
+        pcrh = self.get_previous_cached_record_history()
+        if pcrh:
+            return jsondiff.diff(pcrh.data, self.data)
+        else:
+            return self.data
+
+    def get_data_diff_previous_cached_record_history_html(self):
+        """HTML version of get_data_diff_previous_cached_record_history, for use in templates"""
+        return pygments.highlight(
+            json.dumps(self.get_data_diff_previous_cached_record_history(), indent=4),
+            pygments.lexers.data.JsonLexer(),
+            pygments.formatters.HtmlFormatter(),
+        )
+
     def get_data_fields_include_differences_from_latest_data(self):
+        """Returns list of fields with boolean key different_from_latest_value to indicate if they have changed from the current latest data.
+        This is intended to be used on edits not moderated yet, to show what the affect of approving them would be."""
         if self.approval_event or self.refusal_event:
             raise Exception(
                 "get_data_fields_include_differences_from_latest_data should only be used on edits not moderated yet"
             )
         # TODO work with data_key field.
-        if not self.record.cached_exists:
-            # No existing data, so nothing special we can do here
-            edit_fields = get_field_list_from_json(
-                self.record.type.public_id,
-                self.data,
+        return get_field_list_from_json_with_differences(
+            self.record.type.public_id,
+            self.record.cached_data if self.record.cached_exists else {},
+            self.data,
+            "different_from_latest_value",
+        )
+
+    def get_data_fields_include_differences_from_previous_data(self):
+        """Returns list of fields with boolean key different_from_previous_value to indicate if they have changed since this edit was created."""
+        # TODO work with data_key field.
+        previous_cached_record_history = self.get_previous_cached_record_history()
+        return get_field_list_from_json_with_differences(
+            self.record.type.public_id,
+            previous_cached_record_history.data
+            if previous_cached_record_history
+            else {},
+            self.data,
+            "different_from_previous_value",
+        )
+
+
+class CachedRecordHistory(models.Model):
+    """Stores the historical state of data on a record AFTER a particular event has been applied to it.
+    These are generated only after events with approved edits (created or refused edits do not change a record)
+    """
+
+    id = models.BigAutoField(primary_key=True)
+    record = models.ForeignKey(Record, on_delete=models.CASCADE)
+    event = models.ForeignKey(Event, on_delete=models.CASCADE)
+    data = models.JSONField(default=dict)
+
+    # Use get_previous_cached_record_history() to access information.
+    # _previous_cached_record_history variable caches result to avoid repeated DB lookups.
+    # -1 means it hasn't been looked for yet, None means nothing exists or it could be a CachedRecordHistory instance.
+    _previous_cached_record_history = -1
+
+    def get_data_html(self):
+        return pygments.highlight(
+            json.dumps(self.data, indent=4),
+            pygments.lexers.data.JsonLexer(),
+            pygments.formatters.HtmlFormatter(),
+        )
+
+    def get_previous_cached_record_history(self):
+        """For any record, returns the previous CachedRecordHistory before this event was applied.
+        If this is the first event to change a record, this method could return None."""
+        if self._previous_cached_record_history == -1:
+            self._previous_cached_record_history = (
+                CachedRecordHistory.objects.filter(
+                    record=self.record, event__created__lt=self.event.created
+                )
+                .order_by("-event__created")
+                .first()
             )
-            for e in edit_fields:
-                e["different_from_latest_value"] = True
-            return edit_fields
+        return self._previous_cached_record_history
+
+    def get_data_diff_previous_cached_record_history(self):
+        """Returns dict of differences between this version of the record and the previous one"""
+        pcrh = self.get_previous_cached_record_history()
+        if pcrh:
+            return jsondiff.diff(pcrh.data, self.data)
         else:
+            return self.data
 
-            latest_fields = get_field_list_from_json(
-                self.record.type.public_id, self.record.cached_data
+    def get_data_diff_previous_cached_record_history_html(self):
+        """HTML version of get_data_diff_previous_cached_record_history, for use in templates"""
+        return pygments.highlight(
+            json.dumps(self.get_data_diff_previous_cached_record_history(), indent=4),
+            pygments.lexers.data.JsonLexer(),
+            pygments.formatters.HtmlFormatter(),
+        )
+
+    def get_data_fields_include_differences_from_previous_data(self):
+        """Returns list of fields with boolean key different_from_previous_value to indicate if they have changed"""
+        pcrh = self.get_previous_cached_record_history()
+        return get_field_list_from_json_with_differences(
+            self.record.type.public_id,
+            pcrh.data if pcrh else {},
+            self.data,
+            "different_from_previous_value",
+        )
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["record", "event"],
+                name="cachedrecordhistory_unique_record_event",
             )
-            latest_fields_by_key = {f["key"]: f for f in latest_fields}
-
-            edit_fields = get_field_list_from_json(
-                self.record.type.public_id,
-                self.data,
-            )
-            edit_fields_by_key = {f["key"]: f for f in edit_fields}
-
-            # This will collect changes where the field is in both old and new, and changes where a field exists in new only
-            for field in edit_fields:
-                latest_value = None
-                if field["key"] in latest_fields_by_key:
-                    latest_value = latest_fields_by_key[field["key"]]["value"]
-                field["different_from_latest_value"] = latest_value != field["value"]
-
-            # So new we have to add any changes where the field exists in old only
-            for key, field_data in latest_fields_by_key.items():
-                if key not in edit_fields_by_key:
-                    field_data["different_from_latest_value"] = True
-                    field_data["value"] = None
-                    edit_fields.append(field_data)
-
-            return edit_fields
+        ]
