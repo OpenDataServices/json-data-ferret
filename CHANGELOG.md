@@ -6,6 +6,26 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [0.5.1] - 2021-06-10 - The improved history release that works with merge mode
+
+### Fixed
+
+- Edit & CachedRecordHistory - fix crash in get_data_diff_previous_cached_record_history_html
+- Edit - make get difference methods work with MERGE mode
+- Web UI for an event: Shows correct data in MERGE mode. Shows edit data with no modifications.
+
+### Added
+
+- Edit has a new method get_new_data_when_edit_applied_to_data
+- Edit has a new method get_new_data_when_edit_applied_to_latest_record_cached_data
+- Edit has a new method get_new_data_when_edit_applied_to_previous_cached_record_history
+- Edit has a new method get_new_data_when_edit_applied_to_previous_cached_record_history_html
+
+### Changed
+
+- apply_edit_get_new_cached_data in utils is now replaced with edit.get_new_data_when_edit_applied_to_latest_record_cached_data()
+  But the old function is left for backwards compatibility
+
 ## [0.5.0] - 2021-06-10 - The improved history release
 
 ### Added

@@ -1,8 +1,5 @@
-import jsonmerge
 import jsonpointer
 from django.conf import settings
-
-from jsondataferret import EVENT_MODE_MERGE, EVENT_MODE_REPLACE
 
 
 def get_field_list_from_json_with_differences(
@@ -108,13 +105,5 @@ def get_field_list_from_json_and_field_config_type_list(data, field_config):
 
 
 def apply_edit_get_new_cached_data(edit):
-    if edit.mode == EVENT_MODE_REPLACE:
-        if edit.data_key == "/":
-            return edit.data
-        else:
-            raise Exception("TODO Not Implemented Yet")
-    elif edit.mode == EVENT_MODE_MERGE:
-        if edit.data_key == "/":
-            return jsonmerge.merge(edit.record.cached_data, edit.data)
-        else:
-            raise Exception("TODO Not Implemented Yet")
+    """Only left for backwards compatibility"""
+    return edit.get_new_data_when_edit_applied_to_latest_record_cached_data()
