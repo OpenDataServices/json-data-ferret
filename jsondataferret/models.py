@@ -1,6 +1,7 @@
 import json
 
 import jsondiff
+import jsonmerge
 import jsonpointer
 import jsonschema
 import pygments
@@ -9,7 +10,7 @@ import pygments.lexers.data
 from django.conf import settings
 from django.db import models
 
-from jsondataferret import EVENT_MODE_REPLACE
+from jsondataferret import EVENT_MODE_MERGE, EVENT_MODE_REPLACE
 
 from .utils import get_field_list_from_json, get_field_list_from_json_with_differences
 
@@ -225,13 +226,52 @@ class Edit(models.Model):
             )
         return self._previous_cached_record_history
 
+    def get_new_data_when_edit_applied_to_data(self, current_data):
+        if self.mode == EVENT_MODE_REPLACE:
+            if self.data_key == "/":
+                return self.data
+            else:
+                raise Exception("TODO Not Implemented Yet")
+        elif self.mode == EVENT_MODE_MERGE:
+            if self.data_key == "/":
+                return jsonmerge.merge(current_data, self.data)
+            else:
+                raise Exception("TODO Not Implemented Yet")
+
+    def get_new_data_when_edit_applied_to_latest_record_cached_data(self):
+        """Applies this edit to the latest version of a record as the edit is being approved.
+        Returns the new latest version of a record."""
+        return self.get_new_data_when_edit_applied_to_data(self.record.cached_data)
+
+    def get_new_data_when_edit_applied_to_previous_cached_record_history(self):
+        pcrh = self.get_previous_cached_record_history()
+        if pcrh:
+            return self.get_new_data_when_edit_applied_to_data(pcrh.data)
+        else:
+            return self.get_new_data_when_edit_applied_to_data({})
+
+    def get_new_data_when_edit_applied_to_previous_cached_record_history_html(self):
+        return pygments.highlight(
+            json.dumps(
+                self.get_new_data_when_edit_applied_to_previous_cached_record_history(),
+                indent=4,
+            ),
+            pygments.lexers.data.JsonLexer(),
+            pygments.formatters.HtmlFormatter(),
+        )
+
     def get_data_diff_previous_cached_record_history(self):
         """Returns dict of differences between this version of the record and the previous one"""
         pcrh = self.get_previous_cached_record_history()
         if pcrh:
-            return jsondiff.diff(pcrh.data, self.data)
+            return jsondiff.diff(
+                pcrh.data,
+                self.get_new_data_when_edit_applied_to_previous_cached_record_history(),
+            )
         else:
-            return self.data
+            return (
+                self.get_new_data_when_edit_applied_to_previous_cached_record_history()
+            )
 
     def get_data_diff_previous_cached_record_history_html(self):
         """HTML version of get_data_diff_previous_cached_record_history, for use in templates"""
@@ -257,7 +297,7 @@ class Edit(models.Model):
         return get_field_list_from_json_with_differences(
             self.record.type.public_id,
             self.record.cached_data if self.record.cached_exists else {},
-            self.data,
+            self.get_new_data_when_edit_applied_to_latest_record_cached_data(),
             "different_from_latest_value",
         )
 
@@ -270,7 +310,7 @@ class Edit(models.Model):
             previous_cached_record_history.data
             if previous_cached_record_history
             else {},
-            self.data,
+            self.get_new_data_when_edit_applied_to_previous_cached_record_history(),
             "different_from_previous_value",
         )
 

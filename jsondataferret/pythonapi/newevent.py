@@ -7,7 +7,6 @@ from django.db import transaction
 from jsondataferret import EVENT_MODE_REPLACE
 from jsondataferret.models import Edit, Event, Record, Type
 from jsondataferret.pythonapi.runevents import apply_event
-from jsondataferret.utils import apply_edit_get_new_cached_data
 
 
 class NewEventData:
@@ -57,7 +56,9 @@ class NewEventData:
         edit.mode = self.mode
         edit.data_key = self.key
         edit.data = self.data
-        new_cached_data = apply_edit_get_new_cached_data(edit)
+        new_cached_data = (
+            edit.get_new_data_when_edit_applied_to_latest_record_cached_data()
+        )
         patch = json_merge_patch.create_patch(self.record.cached_data, new_cached_data)
         has_patch = bool(patch)
         return has_patch

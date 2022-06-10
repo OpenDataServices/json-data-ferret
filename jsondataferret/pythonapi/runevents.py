@@ -3,7 +3,6 @@ from django.conf import settings
 from django.db import connection
 
 from jsondataferret.models import CachedRecordHistory, Edit, Event, Record, Type
-from jsondataferret.utils import apply_edit_get_new_cached_data
 
 
 def clear_data_and_run_all_events():
@@ -37,7 +36,9 @@ def apply_event(event):
     for edit in Edit.objects.filter(approval_event=event):
 
         # --------------------------------- Make new data
-        edit.record.cached_data = apply_edit_get_new_cached_data(edit)
+        edit.record.cached_data = (
+            edit.get_new_data_when_edit_applied_to_latest_record_cached_data()
+        )
 
         # --------------------------------- Validate Result
         type_data = settings.JSONDATAFERRET_TYPE_INFORMATION.get(
