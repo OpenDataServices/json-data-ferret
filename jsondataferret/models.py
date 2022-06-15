@@ -275,13 +275,13 @@ class Edit(models.Model):
 
     def get_data_diff_previous_cached_record_history_html(self):
         """HTML version of get_data_diff_previous_cached_record_history, for use in templates"""
-        # Sometimes we can get dicts with symbols as main keys; need to turn to strings before turning to JSON
-        data = {
-            str(k): v
-            for k, v in self.get_data_diff_previous_cached_record_history().items()
-        }
+        # Must pass default function: Sometimes we can get dicts with symbols as keys; need to turn to strings before turning to JSON
         return pygments.highlight(
-            json.dumps(data, indent=4),
+            json.dumps(
+                self.get_data_diff_previous_cached_record_history(),
+                indent=4,
+                default=str,
+            ),
             pygments.lexers.data.JsonLexer(),
             pygments.formatters.HtmlFormatter(),
         )
@@ -360,13 +360,13 @@ class CachedRecordHistory(models.Model):
 
     def get_data_diff_previous_cached_record_history_html(self):
         """HTML version of get_data_diff_previous_cached_record_history, for use in templates"""
-        # Sometimes we can get dicts with symbols as main keys; need to turn to strings before turning to JSON
-        data = {
-            str(k): v
-            for k, v in self.get_data_diff_previous_cached_record_history().items()
-        }
+        # Must pass default function: Sometimes we can get dicts with symbols as keys; need to turn to strings before turning to JSON
         return pygments.highlight(
-            json.dumps(data, indent=4),
+            json.dumps(
+                self.get_data_diff_previous_cached_record_history(),
+                indent=4,
+                default=str,
+            ),
             pygments.lexers.data.JsonLexer(),
             pygments.formatters.HtmlFormatter(),
         )

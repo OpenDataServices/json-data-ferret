@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Fixed
+
+- Fix crashes when using html diff functions; convert symbols to strings properly
+
 ## [0.5.1] - 2021-06-10 - The improved history release that works with merge mode
 
 ### Fixed
