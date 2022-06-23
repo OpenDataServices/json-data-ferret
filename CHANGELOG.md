@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Changed
+
+- For calculating diffs, use already used "json_merge_patch" library. 
+  The library "jsondiff" caused crashes by returning data that was not valid JSON.
+
 ## [0.5.1] - 2021-06-10 - The improved history release that works with merge mode
 
 ### Fixed

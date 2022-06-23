@@ -27,7 +27,6 @@ setup(
         "jsonschema",
         "psycopg2",
         "json-merge-patch",
-        "jsondiff",
     ],
     extras_require={
         "dev": ["pip-tools", "black==22.3", "flake8", "isort", "django-environ"]
