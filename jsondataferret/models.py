@@ -1,6 +1,6 @@
 import json
 
-import jsondiff
+import json_merge_patch
 import jsonmerge
 import jsonpointer
 import jsonschema
@@ -264,7 +264,7 @@ class Edit(models.Model):
         """Returns dict of differences between this version of the record and the previous one"""
         pcrh = self.get_previous_cached_record_history()
         if pcrh:
-            return jsondiff.diff(
+            return json_merge_patch.create_patch(
                 pcrh.data,
                 self.get_new_data_when_edit_applied_to_previous_cached_record_history(),
             )
@@ -275,13 +275,8 @@ class Edit(models.Model):
 
     def get_data_diff_previous_cached_record_history_html(self):
         """HTML version of get_data_diff_previous_cached_record_history, for use in templates"""
-        # Sometimes we can get dicts with symbols as main keys; need to turn to strings before turning to JSON
-        data = {
-            str(k): v
-            for k, v in self.get_data_diff_previous_cached_record_history().items()
-        }
         return pygments.highlight(
-            json.dumps(data, indent=4),
+            json.dumps(self.get_data_diff_previous_cached_record_history(), indent=4),
             pygments.lexers.data.JsonLexer(),
             pygments.formatters.HtmlFormatter(),
         )
@@ -354,19 +349,14 @@ class CachedRecordHistory(models.Model):
         """Returns dict of differences between this version of the record and the previous one"""
         pcrh = self.get_previous_cached_record_history()
         if pcrh:
-            return jsondiff.diff(pcrh.data, self.data)
+            return json_merge_patch.create_patch(pcrh.data, self.data)
         else:
             return self.data
 
     def get_data_diff_previous_cached_record_history_html(self):
         """HTML version of get_data_diff_previous_cached_record_history, for use in templates"""
-        # Sometimes we can get dicts with symbols as main keys; need to turn to strings before turning to JSON
-        data = {
-            str(k): v
-            for k, v in self.get_data_diff_previous_cached_record_history().items()
-        }
         return pygments.highlight(
-            json.dumps(data, indent=4),
+            json.dumps(self.get_data_diff_previous_cached_record_history(), indent=4),
             pygments.lexers.data.JsonLexer(),
             pygments.formatters.HtmlFormatter(),
         )
