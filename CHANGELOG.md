@@ -6,12 +6,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [0.6.0] - 2022-06-29
+
 ### Changed
 
 - For calculating diffs, use already used "json_merge_patch" library. 
   The library "jsondiff" caused crashes by returning data that was not valid JSON.
 
-## [0.5.1] - 2021-06-10 - The improved history release that works with merge mode
+## [0.5.1] - 2022-06-10 - The improved history release that works with merge mode
 
 ### Fixed
 
@@ -31,7 +33,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - apply_edit_get_new_cached_data in utils is now replaced with edit.get_new_data_when_edit_applied_to_latest_record_cached_data()
   But the old function is left for backwards compatibility
 
-## [0.5.0] - 2021-06-10 - The improved history release
+## [0.5.0] - 2022-06-10 - The improved history release
 
 ### Added
 
@@ -50,7 +52,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 Note: After this version is installed, the runeventstreamtodatabase cli command must be run to populate the new CachedRecordHistory cache.
 
-## [0.4.0] - 2021-06-09
+## [0.4.0] - 2022-06-09
 
 ### Fixed
 
