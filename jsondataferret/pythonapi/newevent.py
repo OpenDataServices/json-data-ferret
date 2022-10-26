@@ -63,6 +63,18 @@ class NewEventData:
         has_patch = bool(patch)
         return has_patch
 
+    def get_new_data_when_event_applied_to_latest_record_cached_data(self):
+        self._build_type_and_record(create_if_dont_exist=False)
+        edit = Edit()
+        if isinstance(self.record, Record):
+            edit.record = self.record
+        else:
+            edit.record = Record()
+        edit.mode = self.mode
+        edit.data_key = self.key
+        edit.data = self.data
+        return edit.get_new_data_when_edit_applied_to_latest_record_cached_data()
+
 
 class NewEventApproval:
     def __init__(self, edit):

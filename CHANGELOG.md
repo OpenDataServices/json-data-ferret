@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [0.7.0] - 2022-10-26
+
+### Added
+
+- Add get_new_data_when_event_applied_to_latest_record_cached_data to jsondataferret.pythonapi.newevent.NewEventData
+
 ## [0.6.0] - 2022-06-29
 
 ### Changed
