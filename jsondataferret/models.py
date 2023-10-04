@@ -128,7 +128,7 @@ class Event(models.Model):
             + (
                 "WHERE jsondataferret_edit.approval_event_id = %(event_id)s "
                 if approved_edits_only
-                else "WHERE jsondataferret_edit.creation_event_id = %(event_id)s OR jsondataferret_edit.refusal_event_id = %(event_id)s OR jsondataferret_edit.approval_event_id = %(event_id)s"
+                else "WHERE jsondataferret_edit.creation_event_id = %(event_id)s OR jsondataferret_edit.refusal_event_id = %(event_id)s OR jsondataferret_edit.approval_event_id = %(event_id)s "
             )
             + "GROUP BY jsondataferret_record.id "
             + "ORDER BY max(jsondataferret_type.title) ASC,  jsondataferret_record.public_id ASC"
