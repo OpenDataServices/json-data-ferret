@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+
+### Fixed
+
+- get_records() on Event model could have SQL error due to lack of space
+
 ## [0.7.0] - 2022-10-26
 
 ### Added
