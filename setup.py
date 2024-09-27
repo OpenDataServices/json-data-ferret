@@ -31,5 +31,5 @@ setup(
     extras_require={
         "dev": ["pip-tools", "black==22.3", "flake8", "isort", "django-environ"]
     },
-    python_requires=">=3.8",
+    python_requires=">=3.9",
 )
